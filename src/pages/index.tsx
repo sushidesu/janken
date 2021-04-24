@@ -6,4 +6,6 @@ function Index(): JSX.Element {
   )
 }
 
+const hoge = ""
+
 export default Index
