@@ -3,9 +3,9 @@ function Index(): JSX.Element {
     <div>
       <h1>Hello</h1>
     </div>
-  )
+  );
 }
 
-const hoge = ""
+const hoge = "";
 
-export default Index
+export default Index;
