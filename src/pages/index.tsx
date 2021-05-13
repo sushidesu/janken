@@ -1,34 +1,42 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { JankenButton } from "../components/JankenButton";
+import { HandViewer } from "../components/HandViewer";
 
-type Hand = "rock" | "paper" | "scissors";
-
-const HAND_EMOJI: {
-  [key in Hand]: string;
-} = {
-  rock: "✊",
-  paper: "🖐",
-  scissors: "✌",
-};
+export type Hand = "rock" | "paper" | "scissors";
 
 function Index(): JSX.Element {
   const [hand, setHand] = useState<Hand>("rock");
+  const randomHand = (): Hand => {
+    const HANDS: Hand[] = ["rock", "paper", "scissors"];
+    return HANDS[Math.floor(Math.random() * 3)];
+  };
+  const opponentHand = randomHand();
   return (
     <div>
       <h1 className={clsx("font-bold", "text-xl")}>Janken</h1>
-      <div className={clsx("mt-10")}>
-        <p className={clsx("font-bold", "text-3xl")}>{HAND_EMOJI[hand]}</p>
+      <div>
+        <div className={clsx("mt-10")}>
+          <HandViewer hand={hand} />
+        </div>
+        <div className={clsx("flex", "mt-10")}>
+          <div className={clsx()}>
+            <JankenButton onClick={() => setHand("rock")} hand={"rock"} />
+          </div>
+          <div className={clsx("ml-3")}>
+            <JankenButton
+              onClick={() => setHand("scissors")}
+              hand={"scissors"}
+            />
+          </div>
+          <div className={clsx("ml-3")}>
+            <JankenButton onClick={() => setHand("paper")} hand={"paper"} />
+          </div>
+        </div>
       </div>
-      <div className={clsx("flex", "mt-10")}>
-        <div className={clsx()}>
-          <JankenButton onClick={() => setHand("rock")} hand={"rock"} />
-        </div>
-        <div className={clsx("ml-3")}>
-          <JankenButton onClick={() => setHand("scissors")} hand={"scissors"} />
-        </div>
-        <div className={clsx("ml-3")}>
-          <JankenButton onClick={() => setHand("paper")} hand={"paper"} />
+      <div>
+        <div>
+          <HandViewer hand={opponentHand} />
         </div>
       </div>
     </div>
