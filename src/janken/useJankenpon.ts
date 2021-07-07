@@ -9,20 +9,23 @@ type Pon = (hand: Hand) => void;
 type JankenPonResponse =
   | {
       status: "waiting";
-      ponPlayerA: Pon;
-      ponPlayerB: Pon;
     }
   | {
       status: "done";
       result: JankenResult;
-      ponPlayerA: Pon;
-      ponPlayerB: Pon;
     };
 
 export const useJankenpon = (
   playerA: User,
   playerB: User
-): JankenPonResponse => {
+): {
+  value: JankenPonResponse;
+  playerAHand: Hand;
+  playerBHand: Hand;
+  ponPlayerA: Pon;
+  ponPlayerB: Pon;
+  reset: () => void;
+} => {
   const [playerAHand, setPlayerAHand] = useState<Hand | undefined>(undefined);
   const [playerBHand, setPlayerBHand] = useState<Hand | undefined>(undefined);
 
@@ -32,12 +35,21 @@ export const useJankenpon = (
   const ponPlayerB = useCallback((hand: Hand) => {
     setPlayerBHand(hand);
   }, []);
+  const reset = useCallback(() => {
+    setPlayerAHand(undefined);
+    setPlayerBHand(undefined);
+  }, []);
 
   if (!playerAHand || !playerBHand) {
     return {
-      status: "waiting",
+      value: {
+        status: "waiting",
+      },
       ponPlayerA,
+      playerAHand,
       ponPlayerB,
+      playerBHand,
+      reset,
     };
   }
 
@@ -46,12 +58,15 @@ export const useJankenpon = (
     new JankenHand(playerAHand),
     new JankenHand(playerBHand)
   );
-  setPlayerAHand(undefined);
-  setPlayerBHand(undefined);
   return {
-    status: "done",
-    result,
+    value: {
+      status: "done",
+      result,
+    },
     ponPlayerA,
+    playerAHand,
     ponPlayerB,
+    playerBHand,
+    reset,
   };
 };

@@ -1,92 +1,92 @@
-import { useState } from "react";
 import clsx from "clsx";
 import { JankenButton } from "../components/JankenButton";
 import { HandViewer } from "../components/HandViewer";
-import { WinnerList } from "../components/WinnerList";
+import { useJankenpon } from "../janken/useJankenpon";
+import { User } from "../janken/user";
 
 export type Hand = "rock" | "paper" | "scissors";
 
 export type Player = "me" | "opponent";
 
 function Index(): JSX.Element {
-  const [meHand, setMeHand] = useState<Hand>("rock");
-  const [opponentHand, setOpponentHand] = useState<Hand>("rock");
+  const A = new User("a", "自分");
+  const B = new User("b", "相手");
 
-  const randomHand = (): Hand => {
-    const HANDS: Hand[] = ["rock", "paper", "scissors"];
-    return HANDS[Math.floor(Math.random() * 3)];
-  };
+  const {
+    value,
+    playerAHand,
+    ponPlayerA,
+    playerBHand,
+    ponPlayerB,
+  } = useJankenpon(A, B);
 
-  const [winners, setWinners] = useState<Player[]>([]);
-  const battleCount = winners.filter((winner) => winner !== null).length;
-  const meWinRate =
-    (winners.filter((winner) => winner === "me").length / battleCount) * 100;
-
-  const calcWinner = (handA: Hand, handB: Hand): Player | null => {
-    if (handA === handB) {
-      return null;
-    }
-    switch (handA) {
-      case "rock":
-        if (handB === "scissors") {
-          return "me";
-        } else {
-          return "opponent";
-        }
-      case "paper":
-        if (handB === "rock") {
-          return "me";
-        } else {
-          return "opponent";
-        }
-      case "scissors":
-        if (handB === "paper") {
-          return "me";
-        } else {
-          return "opponent";
-        }
-    }
-  };
-
-  const jankenpon = (newMeHand: Hand) => () => {
-    const newOppoentHand = randomHand();
-    setMeHand(newMeHand);
-    setOpponentHand(newOppoentHand);
-    const winner = calcWinner(newMeHand, newOppoentHand);
-    console.log({ newMeHand, newOppoentHand, winner });
-    setWinners((prev) => prev.concat(winner));
-  };
+  const result =
+    value.status === "waiting"
+      ? "待機中..."
+      : value.result.type === "draw"
+      ? "あいこ"
+      : `${value.result.winner.user.name}の勝ち`;
 
   return (
     <div>
       <h1 className={clsx("font-bold", "text-xl")}>Janken</h1>
-      <p>{`勝率: ${meWinRate}`}</p>
-      <ol>
-        {winners.map((winner, index) => (
-          <WinnerList key={index} player={winner} />
-        ))}
-      </ol>
-      <div>
-        <div className={clsx("mt-10")}>
-          <p>自分</p>
-          <HandViewer hand={meHand} />
-        </div>
-        <div className={clsx("flex", "mt-10")}>
-          <div className={clsx()}>
-            <JankenButton onClick={jankenpon("rock")} hand={"rock"} />
-          </div>
-          <div className={clsx("ml-3")}>
-            <JankenButton onClick={jankenpon("scissors")} hand={"scissors"} />
-          </div>
-          <div className={clsx("ml-3")}>
-            <JankenButton onClick={jankenpon("paper")} hand={"paper"} />
-          </div>
-        </div>
+
+      <div className={clsx("mt-10")}>
+        <p>{result}</p>
       </div>
-      <div>
+
+      <div className={clsx("mt-10")}>
+        <div>
+          <p>自分</p>
+          {playerAHand ? (
+            <HandViewer hand={playerAHand} />
+          ) : (
+            <div>loading...</div>
+          )}
+          <div className={clsx("flex")}>
+            <div className={clsx()}>
+              <JankenButton onClick={() => ponPlayerA("rock")} hand={"rock"} />
+            </div>
+            <div className={clsx("ml-3")}>
+              <JankenButton
+                onClick={() => ponPlayerA("scissors")}
+                hand={"scissors"}
+              />
+            </div>
+            <div className={clsx("ml-3")}>
+              <JankenButton
+                onClick={() => ponPlayerA("paper")}
+                hand={"paper"}
+              />
+            </div>
+          </div>
+        </div>
+
+        <hr className={clsx("my-10")} />
         <div>
           <p>相手</p>
-          <HandViewer hand={opponentHand} />
+          {playerBHand ? (
+            <HandViewer hand={playerBHand} />
+          ) : (
+            <div>loading...</div>
+          )}
+          <div className={clsx("flex")}>
+            <div className={clsx()}>
+              <JankenButton onClick={() => ponPlayerB("rock")} hand={"rock"} />
+            </div>
+            <div className={clsx("ml-3")}>
+              <JankenButton
+                onClick={() => ponPlayerB("scissors")}
+                hand={"scissors"}
+              />
+            </div>
+            <div className={clsx("ml-3")}>
+              <JankenButton
+                onClick={() => ponPlayerB("paper")}
+                hand={"paper"}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
