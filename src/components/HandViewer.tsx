@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Hand } from "../pages/index";
 
 export type Props = {
-  hand: Hand;
+  hand: Hand | undefined;
 };
 
 const HAND_EMOJI: {
@@ -15,5 +15,9 @@ const HAND_EMOJI: {
 };
 
 export function HandViewer({ hand }: Props): JSX.Element {
-  return <p className={clsx("font-bold", "text-3xl")}>{HAND_EMOJI[hand]}</p>;
+  if (hand) {
+    return <p className={clsx("font-bold", "text-3xl")}>{HAND_EMOJI[hand]}</p>;
+  } else {
+    return <p className={clsx("font-bold", "text-3xl")}>{"?"}</p>;
+  }
 }

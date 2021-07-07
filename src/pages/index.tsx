@@ -38,11 +38,7 @@ function Index(): JSX.Element {
       <div className={clsx("mt-10")}>
         <div>
           <p>自分</p>
-          {playerAHand ? (
-            <HandViewer hand={playerAHand} />
-          ) : (
-            <div>loading...</div>
-          )}
+          <HandViewer hand={playerAHand} />
           <div className={clsx("flex")}>
             <div className={clsx()}>
               <JankenButton onClick={() => ponPlayerA("rock")} hand={"rock"} />
@@ -65,11 +61,7 @@ function Index(): JSX.Element {
         <hr className={clsx("my-10")} />
         <div>
           <p>相手</p>
-          {playerBHand ? (
-            <HandViewer hand={playerBHand} />
-          ) : (
-            <div>loading...</div>
-          )}
+          <HandViewer hand={playerBHand} />
           <div className={clsx("flex")}>
             <div className={clsx()}>
               <JankenButton onClick={() => ponPlayerB("rock")} hand={"rock"} />
