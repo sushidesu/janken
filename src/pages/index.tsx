@@ -1,3 +1,4 @@
+import Head from "next/head";
 import clsx from "clsx";
 import { JankenButton } from "../components/JankenButton";
 import { HandViewer } from "../components/HandViewer";
@@ -38,6 +39,9 @@ function Index(): JSX.Element {
         "items-center"
       )}
     >
+      <Head>
+        <title>じゃんけんオンライン</title>
+      </Head>
       <h1 className={clsx("mt-10", "font-bold", "text-xl")}>Janken</h1>
 
       <div className={clsx("mt-10")}>
