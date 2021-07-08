@@ -41,19 +41,13 @@ function Index(): JSX.Element {
           <HandViewer hand={playerAHand} />
           <div className={clsx("flex")}>
             <div className={clsx()}>
-              <JankenButton onClick={() => ponPlayerA("rock")} hand={"rock"} />
+              <JankenButton onClick={ponPlayerA} hand={"rock"} />
             </div>
             <div className={clsx("ml-3")}>
-              <JankenButton
-                onClick={() => ponPlayerA("scissors")}
-                hand={"scissors"}
-              />
+              <JankenButton onClick={ponPlayerA} hand={"scissors"} />
             </div>
             <div className={clsx("ml-3")}>
-              <JankenButton
-                onClick={() => ponPlayerA("paper")}
-                hand={"paper"}
-              />
+              <JankenButton onClick={ponPlayerA} hand={"paper"} />
             </div>
           </div>
         </div>
@@ -64,19 +58,13 @@ function Index(): JSX.Element {
           <HandViewer hand={playerBHand} />
           <div className={clsx("flex")}>
             <div className={clsx()}>
-              <JankenButton onClick={() => ponPlayerB("rock")} hand={"rock"} />
+              <JankenButton onClick={ponPlayerB} hand={"rock"} />
             </div>
             <div className={clsx("ml-3")}>
-              <JankenButton
-                onClick={() => ponPlayerB("scissors")}
-                hand={"scissors"}
-              />
+              <JankenButton onClick={ponPlayerB} hand={"scissors"} />
             </div>
             <div className={clsx("ml-3")}>
-              <JankenButton
-                onClick={() => ponPlayerB("paper")}
-                hand={"paper"}
-              />
+              <JankenButton onClick={ponPlayerB} hand={"paper"} />
             </div>
           </div>
         </div>

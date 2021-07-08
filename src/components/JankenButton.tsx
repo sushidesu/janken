@@ -1,8 +1,9 @@
 import clsx from "clsx";
+import { Hand } from "../janken/jankenHand";
 
 export type Props = {
-  hand: "rock" | "paper" | "scissors";
-  onClick: () => void;
+  hand: Hand;
+  onClick: (hand: Hand) => void;
 };
 
 export function JankenButton({ hand, onClick }: Props): JSX.Element {
@@ -18,7 +19,9 @@ export function JankenButton({ hand, onClick }: Props): JSX.Element {
   };
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        onClick(hand);
+      }}
       className={clsx("px-4", "py-1.5", "bg-blue-300", "rounded-sm")}
     >
       {label()}
