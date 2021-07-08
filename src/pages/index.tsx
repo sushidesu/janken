@@ -54,7 +54,7 @@ function Index(): JSX.Element {
             "space-y-5"
           )}
         >
-          <p>自分</p>
+          <p>{A.name}</p>
           <HandViewer hand={playerAHand} />
           <div className={clsx("flex", "space-x-3")}>
             <JankenButton onClick={ponPlayerA} hand={"rock"} />
@@ -74,7 +74,7 @@ function Index(): JSX.Element {
             "space-y-5"
           )}
         >
-          <p>相手</p>
+          <p>{B.name}</p>
           <HandViewer hand={playerBHand} />
           <div className={clsx("flex", "space-x-3")}>
             <JankenButton onClick={ponPlayerB} hand={"rock"} />
