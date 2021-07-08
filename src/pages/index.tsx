@@ -28,44 +28,58 @@ function Index(): JSX.Element {
       : `${value.result.winner.user.name}の勝ち`;
 
   return (
-    <div>
-      <h1 className={clsx("font-bold", "text-xl")}>Janken</h1>
+    <div
+      className={clsx(
+        "max-w-md",
+        "mx-auto",
+        "flex",
+        "flex-col",
+        "justify-center",
+        "items-center"
+      )}
+    >
+      <h1 className={clsx("mt-10", "font-bold", "text-xl")}>Janken</h1>
 
       <div className={clsx("mt-10")}>
-        <p>{result}</p>
+        <p className={clsx("text-lg")}>{result}</p>
       </div>
 
       <div className={clsx("mt-10")}>
-        <div>
+        <div
+          className={clsx(
+            "flex",
+            "flex-col",
+            "justify-center",
+            "items-center",
+            "space-y-5"
+          )}
+        >
           <p>自分</p>
           <HandViewer hand={playerAHand} />
-          <div className={clsx("flex")}>
-            <div className={clsx()}>
-              <JankenButton onClick={ponPlayerA} hand={"rock"} />
-            </div>
-            <div className={clsx("ml-3")}>
-              <JankenButton onClick={ponPlayerA} hand={"scissors"} />
-            </div>
-            <div className={clsx("ml-3")}>
-              <JankenButton onClick={ponPlayerA} hand={"paper"} />
-            </div>
+          <div className={clsx("flex", "space-x-3")}>
+            <JankenButton onClick={ponPlayerA} hand={"rock"} />
+            <JankenButton onClick={ponPlayerA} hand={"scissors"} />
+            <JankenButton onClick={ponPlayerA} hand={"paper"} />
           </div>
         </div>
 
-        <hr className={clsx("my-10")} />
-        <div>
+        <hr className={clsx("w-full", "my-10")} />
+
+        <div
+          className={clsx(
+            "flex",
+            "flex-col",
+            "justify-center",
+            "items-center",
+            "space-y-5"
+          )}
+        >
           <p>相手</p>
           <HandViewer hand={playerBHand} />
-          <div className={clsx("flex")}>
-            <div className={clsx()}>
-              <JankenButton onClick={ponPlayerB} hand={"rock"} />
-            </div>
-            <div className={clsx("ml-3")}>
-              <JankenButton onClick={ponPlayerB} hand={"scissors"} />
-            </div>
-            <div className={clsx("ml-3")}>
-              <JankenButton onClick={ponPlayerB} hand={"paper"} />
-            </div>
+          <div className={clsx("flex", "space-x-3")}>
+            <JankenButton onClick={ponPlayerB} hand={"rock"} />
+            <JankenButton onClick={ponPlayerB} hand={"scissors"} />
+            <JankenButton onClick={ponPlayerB} hand={"paper"} />
           </div>
         </div>
       </div>
