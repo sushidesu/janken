@@ -1,5 +1,6 @@
 import Head from "next/head";
 import clsx from "clsx";
+import { database } from "../plugins/firebase";
 import { JankenButton } from "../components/JankenButton";
 import { HandViewer } from "../components/HandViewer";
 import { useJankenpon } from "../janken/useJankenpon";
@@ -13,13 +14,25 @@ function Index(): JSX.Element {
   const A = new User("a", "自分");
   const B = new User("b", "相手");
 
-  const {
-    value,
-    playerAHand,
-    ponPlayerA,
-    playerBHand,
-    ponPlayerB,
-  } = useJankenpon(A, B);
+  const roomRef = database.ref("rooms/testroom");
+
+  const { value, playerAHand, ponPlayerA, playerBHand, ponPlayerB } =
+    useJankenpon(A, B);
+
+  const handlePonPlayerA = (hand: Hand) => {
+    ponPlayerA(hand);
+    roomRef.child("hands").push({
+      user: A.id,
+      hand: hand,
+    });
+  };
+  const handlePonPlayerB = (hand: Hand) => {
+    ponPlayerB(hand);
+    roomRef.child("hands").push({
+      user: B.id,
+      hand: hand,
+    });
+  };
 
   const result =
     value.status === "waiting"
@@ -61,9 +74,9 @@ function Index(): JSX.Element {
           <p>{A.name}</p>
           <HandViewer hand={playerAHand} />
           <div className={clsx("flex", "space-x-3")}>
-            <JankenButton onClick={ponPlayerA} hand={"rock"} />
-            <JankenButton onClick={ponPlayerA} hand={"scissors"} />
-            <JankenButton onClick={ponPlayerA} hand={"paper"} />
+            <JankenButton onClick={handlePonPlayerA} hand={"rock"} />
+            <JankenButton onClick={handlePonPlayerA} hand={"scissors"} />
+            <JankenButton onClick={handlePonPlayerA} hand={"paper"} />
           </div>
         </div>
 
@@ -81,9 +94,9 @@ function Index(): JSX.Element {
           <p>{B.name}</p>
           <HandViewer hand={playerBHand} />
           <div className={clsx("flex", "space-x-3")}>
-            <JankenButton onClick={ponPlayerB} hand={"rock"} />
-            <JankenButton onClick={ponPlayerB} hand={"scissors"} />
-            <JankenButton onClick={ponPlayerB} hand={"paper"} />
+            <JankenButton onClick={handlePonPlayerB} hand={"rock"} />
+            <JankenButton onClick={handlePonPlayerB} hand={"scissors"} />
+            <JankenButton onClick={handlePonPlayerB} hand={"paper"} />
           </div>
         </div>
       </div>
