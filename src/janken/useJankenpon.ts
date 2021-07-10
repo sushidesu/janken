@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
+import { database } from "../plugins/firebase";
 import { Hand, JankenHand } from "./jankenHand";
 import { JankenResult } from "./jankenResult";
 import { User } from "./user";
@@ -8,12 +9,17 @@ type Pon = (hand: Hand) => void;
 
 type JankenPonResponse =
   | {
-      status: "waiting";
+      status: "waiting" | "loading";
     }
   | {
       status: "done";
       result: JankenResult;
     };
+
+type History = {
+  hand: Hand;
+  user: string;
+};
 
 export const useJankenpon = (
   playerA: User,
@@ -24,20 +30,44 @@ export const useJankenpon = (
   playerBHand: Hand;
   ponPlayerA: Pon;
   ponPlayerB: Pon;
-  reset: () => void;
 } => {
   const [playerAHand, setPlayerAHand] = useState<Hand | undefined>(undefined);
   const [playerBHand, setPlayerBHand] = useState<Hand | undefined>(undefined);
 
+  const roomRef = database.ref("rooms/testroom");
+
+  useEffect(() => {
+    console.log("on");
+    roomRef
+      .child("hands")
+      .limitToLast(1)
+      .on("child_added", (snap) => {
+        const value = snap.val() as History;
+        console.log(value);
+        if (value.user === playerA.id) {
+          setPlayerAHand(value.hand);
+        } else {
+          setPlayerBHand(value.hand);
+        }
+      });
+
+    return () => {
+      console.log("off");
+      roomRef.child("hands").off();
+    };
+  }, []);
+
   const ponPlayerA = useCallback((hand: Hand) => {
-    setPlayerAHand(hand);
+    roomRef.child("hands").push({
+      hand: hand,
+      user: playerA.id,
+    });
   }, []);
   const ponPlayerB = useCallback((hand: Hand) => {
-    setPlayerBHand(hand);
-  }, []);
-  const reset = useCallback(() => {
-    setPlayerAHand(undefined);
-    setPlayerBHand(undefined);
+    roomRef.child("hands").push({
+      hand: hand,
+      user: playerB.id,
+    });
   }, []);
 
   if (!playerAHand || !playerBHand) {
@@ -49,7 +79,6 @@ export const useJankenpon = (
       playerAHand,
       ponPlayerB,
       playerBHand,
-      reset,
     };
   }
 
@@ -67,6 +96,5 @@ export const useJankenpon = (
     playerAHand,
     ponPlayerB,
     playerBHand,
-    reset,
   };
 };
