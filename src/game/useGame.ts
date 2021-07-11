@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { User } from "../janken/user";
 
-type GameStatus = "waitingPlayers" | "active";
+export type GameStatus = "waiting" | "ready" | "game" | "result";
 
-type UseGameResponse = {
+export type UseGameResponse = {
   you: User;
   opponent: User;
   status: GameStatus;
 };
 
 export const useGame = (): UseGameResponse => {
-  const [status] = useState<GameStatus>("waitingPlayers");
+  const [status] = useState<GameStatus>("waiting");
   const A = new User("a", "自分");
   const B = new User("b", "相手");
 

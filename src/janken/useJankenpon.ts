@@ -22,29 +22,33 @@ type History = {
 };
 
 export const useJankenpon = (
+  roomId: string,
   playerA: User,
   playerB: User
 ): {
   value: JankenPonResponse;
-  playerAHand: Hand;
-  playerBHand: Hand;
+  playerAHand: Hand | undefined;
+  playerBHand: Hand | undefined;
   ponPlayerA: Pon;
-  ponPlayerB: Pon;
+  disable: boolean;
 } => {
+  const [disable, setDisable] = useState<boolean>(false);
   const [playerAHand, setPlayerAHand] = useState<Hand | undefined>(undefined);
   const [playerBHand, setPlayerBHand] = useState<Hand | undefined>(undefined);
 
-  const roomRef = database.ref("rooms/testroom");
+  const roomRef = database.ref(`room/${roomId}`);
+  const HAND_PATH = "hand";
 
   useEffect(() => {
     console.log("on");
     roomRef
-      .child("hands")
-      .limitToLast(1)
+      .child(HAND_PATH)
+      .limitToLast(2)
       .on("child_added", (snap) => {
         const value = snap.val() as History;
         console.log(value);
         if (value.user === playerA.id) {
+          setDisable(true);
           setPlayerAHand(value.hand);
         } else {
           setPlayerBHand(value.hand);
@@ -53,20 +57,14 @@ export const useJankenpon = (
 
     return () => {
       console.log("off");
-      roomRef.child("hands").off();
+      roomRef.child(HAND_PATH).off();
     };
   }, []);
 
   const ponPlayerA = useCallback((hand: Hand) => {
-    roomRef.child("hands").push({
+    roomRef.child(HAND_PATH).push({
       hand: hand,
       user: playerA.id,
-    });
-  }, []);
-  const ponPlayerB = useCallback((hand: Hand) => {
-    roomRef.child("hands").push({
-      hand: hand,
-      user: playerB.id,
     });
   }, []);
 
@@ -77,8 +75,8 @@ export const useJankenpon = (
       },
       ponPlayerA,
       playerAHand,
-      ponPlayerB,
       playerBHand,
+      disable,
     };
   }
 
@@ -94,7 +92,7 @@ export const useJankenpon = (
     },
     ponPlayerA,
     playerAHand,
-    ponPlayerB,
     playerBHand,
+    disable,
   };
 };
