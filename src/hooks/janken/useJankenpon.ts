@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { database } from "../plugins/firebase";
+import { database } from "../../plugins/firebase";
 import { Hand, JankenHand } from "./jankenHand";
 import { JankenResult } from "./jankenResult";
 import { User } from "./user";

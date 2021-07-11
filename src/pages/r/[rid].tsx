@@ -1,33 +1,69 @@
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
+import { useEffect } from "react";
 import clsx from "clsx";
-import { useGame } from "../../game/useGame";
-import { useJankenpon } from "../../janken/useJankenpon";
-import { HandViewer } from "../../components/HandViewer";
-import { JankenButton } from "../../components/JankenButton";
-import { JankenButtonContainer } from "../../components/JankenButtonContainer";
+import { GetCurrentUserUsecase } from "../../usecase/getCurrentUser";
+import { FirebaseClient } from "../../infra/firebaseClient";
+import { useRoom } from "../../hooks/room/useRoom";
+import { UserName } from "../../components/UserName";
 
-function RoomPage({ rid }: { rid: string }): JSX.Element {
-  const { you, opponent } = useGame();
+type Props = {
+  roomId: string | undefined;
+};
 
-  const { value, playerAHand, ponPlayerA, playerBHand } = useJankenpon(
-    rid,
-    you,
-    opponent
-  );
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { rid } = context.query;
+  if (typeof rid === "string") {
+    return {
+      props: {
+        roomId: rid,
+      },
+    };
+  } else {
+    return {
+      props: {
+        roomId: undefined,
+      },
+    };
+  }
+};
 
-  const result = () => {
-    switch (value.status) {
-      case "loading":
-      case "waiting":
-        return "待機中...";
-      case "done":
-        if (value.result.type === "draw") {
-          return "あいこ";
+function RoomPage({
+  roomId,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+  const rid = roomId ?? "";
+  const firebaseClient = new FirebaseClient();
+  const getCurrentUser = new GetCurrentUserUsecase(firebaseClient);
+
+  const { room, dispatch } = useRoom();
+
+  useEffect(() => {
+    let unmounted = false;
+
+    const fetcher = async () => {
+      const currentUser = await getCurrentUser.get(rid);
+      if (!unmounted) {
+        if (!currentUser) {
+          window.alert("部屋に入れませんでした");
         } else {
-          return `${value.result.winner.user.name}の勝ち`;
+          dispatch({
+            type: "enterPlayer",
+            payload: {
+              id: currentUser.id,
+              name: currentUser.name,
+            },
+          });
         }
-    }
-  };
+      }
+    };
+    fetcher();
+
+    return () => {
+      unmounted = true;
+    };
+  }, []);
 
   return (
     <div
@@ -47,24 +83,13 @@ function RoomPage({ rid }: { rid: string }): JSX.Element {
 
       <div className={clsx("mt-10", "flex", "space-x-10")}>
         <div>
-          <p>{you.name}</p>
-          <HandViewer hand={playerAHand} />
-        </div>
-        <div className={clsx()}>
-          <p className={clsx("text-lg")}>{result()}</p>
+          <p>自分</p>
+          <UserName name={room.player?.name} />
         </div>
         <div>
-          <p>{opponent.name}</p>
-          <HandViewer hand={playerBHand} />
+          <p>相手</p>
+          <UserName name={room.opponent?.name} />
         </div>
-      </div>
-
-      <div className={clsx("mt-10")}>
-        <JankenButtonContainer>
-          <JankenButton onClick={ponPlayerA} hand={"rock"} />
-          <JankenButton onClick={ponPlayerA} hand={"scissors"} />
-          <JankenButton onClick={ponPlayerA} hand={"paper"} />
-        </JankenButtonContainer>
       </div>
     </div>
   );

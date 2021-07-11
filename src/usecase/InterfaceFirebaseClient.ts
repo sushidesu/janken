@@ -3,6 +3,22 @@ export type CreateRoomProps = {
   hostUserId: string;
 };
 
+export type GetUserInRoomProps = {
+  roomId: string;
+  userId: string;
+};
+
+export class UserInRoomInputData {
+  constructor(
+    public readonly id: string,
+    public readonly name: string,
+    public readonly hostOrGuest: "host" | "guest"
+  ) {}
+}
+
 export interface IFirebaseClient {
   createRoom(props: CreateRoomProps): Promise<string>;
+  getUserInRoomByUserId(
+    props: GetUserInRoomProps
+  ): Promise<UserInRoomInputData | undefined>;
 }
