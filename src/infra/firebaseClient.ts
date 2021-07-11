@@ -1,4 +1,4 @@
-import { database } from "../plugins/firebase";
+import { database, auth } from "../plugins/firebase";
 import {
   IFirebaseClient,
   CreateRoomProps,
@@ -19,6 +19,11 @@ export class FirebaseClient implements IFirebaseClient {
     const newRoomRef = database.ref(ROOM_ROOT_NAME).push(newRoom);
     return (await newRoomRef.key) as string; // roomはrootではないのでキャストできる
   }
+
+  async getCurrentUserId(): Promise<string | undefined> {
+    return auth.currentUser?.uid;
+  }
+
   async getUserInRoomByUserId({
     roomId,
     userId,

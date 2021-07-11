@@ -10,9 +10,12 @@ export class GetCurrentUserUsecase {
   public async get(
     roomId: string
   ): Promise<GetCurrentUserOutputData | undefined> {
-    const getId = () => "test";
+    const id = await this.firebaseClient.getCurrentUserId();
+    if (!id) {
+      console.log("not logged in");
+      return undefined;
+    }
 
-    const id = getId();
     const user = await this.firebaseClient.getUserInRoomByUserId({
       roomId,
       userId: id,

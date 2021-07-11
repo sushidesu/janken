@@ -18,6 +18,7 @@ export class UserInRoomInputData {
 
 export interface IFirebaseClient {
   createRoom(props: CreateRoomProps): Promise<string>;
+  getCurrentUserId(): Promise<string | undefined>;
   getUserInRoomByUserId(
     props: GetUserInRoomProps
   ): Promise<UserInRoomInputData | undefined>;
