@@ -1,6 +1,7 @@
 import React from "react";
 import clsx from "clsx";
-import { Hand } from "../pages/index";
+
+export type Hand = "rock" | "paper" | "scissors";
 
 export type Props = {
   hand: Hand | undefined;

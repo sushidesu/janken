@@ -1,4 +1,4 @@
-import { Player } from "../pages/index";
+export type Player = "me" | "opponent";
 
 export type Props = {
   player: Player;
