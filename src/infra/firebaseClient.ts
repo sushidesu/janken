@@ -20,8 +20,25 @@ export class FirebaseClient implements IFirebaseClient {
     return (await newRoomRef.key) as string; // roomはrootではないのでキャストできる
   }
 
+  public async anonymousLogin(): Promise<string | undefined> {
+    if (auth.currentUser?.uid) {
+      console.log("already logged in", auth.currentUser.uid);
+      return auth.currentUser.uid;
+    }
+
+    const credential = await auth.signInAnonymously();
+    console.log("login anonymously", credential.user?.uid);
+    return credential.user?.uid;
+  }
+
   async getCurrentUserId(): Promise<string | undefined> {
-    return auth.currentUser?.uid;
+    const id = auth.currentUser?.uid;
+    if (id) {
+      console.log("already logged in", id);
+    } else {
+      console.log("not logged in", id);
+    }
+    return id;
   }
 
   async getUserInRoomByUserId({

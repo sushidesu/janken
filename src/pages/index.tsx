@@ -14,7 +14,6 @@ function Index(): JSX.Element {
   const handleClick = useCallback(async () => {
     if (name !== "") {
       const roomId = await createRoom.do({
-        userId: "test",
         userName: name,
       });
       router.push(`/r/${roomId}`);
