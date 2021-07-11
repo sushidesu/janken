@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
 import clsx from "clsx";
-import { GetCurrentUserInRoomUsecase } from "../../usecase/getCurrentUserInRoom";
+import { GetUserInRoomUsecase } from "../../usecase/getUserInRoom";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
@@ -36,7 +36,7 @@ function RoomPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
   const firebaseClient = new FirebaseClient();
-  const getCurrentUser = new GetCurrentUserInRoomUsecase(firebaseClient);
+  const getUser = new GetUserInRoomUsecase(firebaseClient);
 
   const userId = useCurrentUserIdContext();
   const { room, dispatch } = useRoom();
@@ -45,7 +45,7 @@ function RoomPage({
     let unmounted = false;
 
     const fetcher = async (userId: string) => {
-      const currentUser = await getCurrentUser.get({ userId, roomId: rid });
+      const currentUser = await getUser.get({ userId, roomId: rid });
       if (!unmounted) {
         if (!currentUser) {
           window.alert("部屋に入れませんでした");
