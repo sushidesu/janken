@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Hand } from "../janken/jankenHand";
+import { Hand } from "../hooks/janken/jankenHand";
 
 export type Props = {
   hand: Hand;
