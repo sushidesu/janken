@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import clsx from "clsx";
@@ -10,6 +10,17 @@ function Index(): JSX.Element {
   const router = useRouter();
   const firebaseClient = new FirebaseClient();
   const createRoom = new CreateRoomUsecase(firebaseClient);
+
+  const handleClick = useCallback(async () => {
+    if (name !== "") {
+      const roomId = await createRoom.do({
+        userId: "test",
+        userName: name,
+      });
+      router.push(`/r/${roomId}`);
+    }
+  }, [createRoom, router, name]);
+
   return (
     <div
       className={clsx(
@@ -31,17 +42,7 @@ function Index(): JSX.Element {
           setName(e.target.value);
         }}
       />
-      <button
-        onClick={async () => {
-          const roomId = await createRoom.do({
-            userId: "test",
-            userName: name,
-          });
-          router.push(`/r/${roomId}`);
-        }}
-      >
-        部屋を作成
-      </button>
+      <button onClick={handleClick}>部屋を作成</button>
     </div>
   );
 }
