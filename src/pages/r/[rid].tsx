@@ -6,6 +6,7 @@ import { GetCurrentUserInRoomUsecase } from "../../usecase/getCurrentUserInRoom"
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
+import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 
 type Props = {
   roomId: string | undefined;
@@ -37,13 +38,14 @@ function RoomPage({
   const firebaseClient = new FirebaseClient();
   const getCurrentUser = new GetCurrentUserInRoomUsecase(firebaseClient);
 
+  const userId = useCurrentUserIdContext();
   const { room, dispatch } = useRoom();
 
   useEffect(() => {
     let unmounted = false;
 
-    const fetcher = async () => {
-      const currentUser = await getCurrentUser.get(rid);
+    const fetcher = async (userId: string) => {
+      const currentUser = await getCurrentUser.get({ userId, roomId: rid });
       if (!unmounted) {
         if (!currentUser) {
           window.alert("部屋に入れませんでした");
@@ -58,12 +60,14 @@ function RoomPage({
         }
       }
     };
-    fetcher();
+    if (userId) {
+      fetcher(userId);
+    }
 
     return () => {
       unmounted = true;
     };
-  }, []);
+  }, [userId]);
 
   return (
     <div

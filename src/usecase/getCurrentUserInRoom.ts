@@ -7,18 +7,16 @@ export class GetCurrentUserOutputData {
 export class GetCurrentUserInRoomUsecase {
   public constructor(private firebaseClient: IFirebaseClient) {}
 
-  public async get(
-    roomId: string
-  ): Promise<GetCurrentUserOutputData | undefined> {
-    const id = await this.firebaseClient.getCurrentUserId();
-    if (!id) {
-      console.log("not logged in");
-      return undefined;
-    }
-
+  public async get({
+    userId,
+    roomId,
+  }: {
+    userId: string;
+    roomId: string;
+  }): Promise<GetCurrentUserOutputData | undefined> {
     const user = await this.firebaseClient.getUserInRoomByUserId({
       roomId,
-      userId: id,
+      userId,
     });
 
     if (user) {

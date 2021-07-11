@@ -2,18 +2,22 @@ import { useCallback, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import clsx from "clsx";
+import { useCurrentUserIdContext } from "../hooks/firebase/useCurrentUserId";
 import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
   const router = useRouter();
+  const userId = useCurrentUserIdContext();
+
   const firebaseClient = new FirebaseClient();
   const createRoom = new CreateRoomUsecase(firebaseClient);
 
   const handleClick = useCallback(async () => {
-    if (name !== "") {
+    if (name !== "" && userId) {
       const roomId = await createRoom.do({
+        userId: userId,
         userName: name,
       });
       router.push(`/r/${roomId}`);
@@ -41,7 +45,11 @@ function Index(): JSX.Element {
           setName(e.target.value);
         }}
       />
-      <button onClick={handleClick}>部屋を作成</button>
+      {userId ? (
+        <button onClick={handleClick}>部屋を作成</button>
+      ) : (
+        <div>loading...</div>
+      )}
     </div>
   );
 }
