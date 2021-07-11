@@ -2,11 +2,10 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
 import clsx from "clsx";
-import { GetUserInRoomUsecase } from "../../usecase/getUserInRoom";
-import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
+import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 
 type Props = {
   roomId: string | undefined;
@@ -35,39 +34,39 @@ function RoomPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
-  const firebaseClient = new FirebaseClient();
-  const getUser = new GetUserInRoomUsecase(firebaseClient);
 
-  const userId = useCurrentUserIdContext();
+  const currentUserId = useCurrentUserIdContext();
+  const roomValue = useRoomValue(rid);
   const { room, dispatch } = useRoom();
 
   useEffect(() => {
-    let unmounted = false;
-
-    const fetcher = async (userId: string) => {
-      const currentUser = await getUser.get({ userId, roomId: rid });
-      if (!unmounted) {
-        if (!currentUser) {
-          window.alert("部屋に入れませんでした");
-        } else {
-          dispatch({
-            type: "enterPlayer",
-            payload: {
-              id: currentUser.id,
-              name: currentUser.name,
-            },
-          });
-        }
+    console.log(roomValue);
+    console.log(currentUserId);
+    if (roomValue && currentUserId) {
+      const { hostUserId, hostUserName, guestUserId, guestUserName } =
+        roomValue;
+      // ホスト
+      if (hostUserId && hostUserName) {
+        dispatch({
+          type: hostUserId === currentUserId ? "enterPlayer" : "enterOpponent",
+          payload: {
+            id: hostUserId,
+            name: hostUserName,
+          },
+        });
       }
-    };
-    if (userId) {
-      fetcher(userId);
+      // ゲスト
+      if (guestUserId && guestUserName) {
+        dispatch({
+          type: guestUserId === currentUserId ? "enterPlayer" : "enterOpponent",
+          payload: {
+            id: guestUserId,
+            name: guestUserName,
+          },
+        });
+      }
     }
-
-    return () => {
-      unmounted = true;
-    };
-  }, [userId]);
+  }, [roomValue, currentUserId]);
 
   return (
     <div
