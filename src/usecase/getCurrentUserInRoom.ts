@@ -4,7 +4,7 @@ export class GetCurrentUserOutputData {
   constructor(public readonly id: string, public readonly name: string) {}
 }
 
-export class GetCurrentUserUsecase {
+export class GetCurrentUserInRoomUsecase {
   public constructor(private firebaseClient: IFirebaseClient) {}
 
   public async get(

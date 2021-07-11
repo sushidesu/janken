@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
 import clsx from "clsx";
-import { GetCurrentUserUsecase } from "../../usecase/getCurrentUser";
+import { GetCurrentUserInRoomUsecase } from "../../usecase/getCurrentUserInRoom";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
@@ -35,7 +35,7 @@ function RoomPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
   const firebaseClient = new FirebaseClient();
-  const getCurrentUser = new GetCurrentUserUsecase(firebaseClient);
+  const getCurrentUser = new GetCurrentUserInRoomUsecase(firebaseClient);
 
   const { room, dispatch } = useRoom();
 
