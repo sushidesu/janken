@@ -94,6 +94,15 @@ function RoomPage({
           <UserName name={room.opponent?.name} />
         </div>
       </div>
+
+      <div className={clsx("mt-10")}>
+        <p>招待リンク</p>
+        <input
+          className={clsx("border-2")}
+          readOnly
+          value={"https://localhost:3000/invite/hogehoge"}
+        />
+      </div>
     </div>
   );
 }
