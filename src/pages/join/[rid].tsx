@@ -1,5 +1,8 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import clsx from "clsx";
+import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
+import { FirebaseClient } from "../../infra/firebaseClient";
+import { useEffect } from "react";
 
 export type Props = {
   roomId: string | undefined;
@@ -28,7 +31,16 @@ function JoinPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
-  console.log(rid);
+  const userId = useCurrentUserIdContext();
+  const firebase = new FirebaseClient();
+
+  useEffect(() => {
+    if (firebase.canJoinRoom({ roomId: rid, userId })) {
+      console.log("参加可能");
+    } else {
+      console.log("参加不可能");
+    }
+  }, [userId]);
 
   return (
     <div>
