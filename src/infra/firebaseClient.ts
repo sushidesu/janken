@@ -5,6 +5,7 @@ import {
   canJoinRoomProps,
   GetUserInRoomProps,
   UserInRoomInputData,
+  JoinRoomProps,
 } from "../usecase/InterfaceFirebaseClient";
 import { Room, ROOM_PATH, ROOM_ROOT_NAME } from "./scheme";
 
@@ -58,6 +59,37 @@ export class FirebaseClient implements IFirebaseClient {
       // 空きがない
       return false;
     }
+  }
+
+  public async joinRoom({
+    roomId,
+    userId,
+    userName,
+    onJoinSuccess,
+  }: JoinRoomProps): Promise<boolean> {
+    const roomRef = database.ref(ROOM_PATH(roomId));
+    const result = await roomRef.transaction(
+      (maybeRoom) => {
+        if (!maybeRoom) {
+          console.log("部屋が存在しません");
+          return maybeRoom;
+        }
+        const room = maybeRoom as Room;
+        if (room.guestUserId) {
+          console.log("満室です");
+          return;
+        }
+        room["guestUserId"] = userId;
+        room["guestUserName"] = userName;
+        return room;
+      },
+      (err, committed) => {
+        if (err === null && committed && onJoinSuccess) {
+          onJoinSuccess();
+        }
+      }
+    );
+    return result.committed as boolean;
   }
 
   async getUserInRoomByUserId({
