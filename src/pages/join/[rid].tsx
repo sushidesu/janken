@@ -1,9 +1,9 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/router";
+import { useEffect } from "react";
 import clsx from "clsx";
+import { useJankenRouter } from "../../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { FirebaseClient } from "../../infra/firebaseClient";
-import { useEffect } from "react";
 
 export type Props = {
   roomId: string | undefined;
@@ -32,14 +32,14 @@ function JoinPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
-  const router = useRouter();
+  const router = useJankenRouter();
   const userId = useCurrentUserIdContext();
   const firebase = new FirebaseClient();
 
   useEffect(() => {
     if (firebase.canJoinRoom({ roomId: rid, userId })) {
       console.log("参加可能");
-      router.push(`/r/${rid}`);
+      router.push({ page: "room", roomId: rid });
     } else {
       console.log("参加不可能");
     }

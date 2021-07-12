@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import clsx from "clsx";
+import { useJankenRouter } from "../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../hooks/firebase/useCurrentUserId";
 import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
-  const router = useRouter();
+  const router = useJankenRouter();
   const userId = useCurrentUserIdContext();
 
   const firebaseClient = new FirebaseClient();
@@ -20,7 +20,7 @@ function Index(): JSX.Element {
         userId: userId,
         userName: name,
       });
-      router.push(`/r/${roomId}`);
+      router.push({ page: "room", roomId });
     }
   }, [createRoom, router, name]);
 
