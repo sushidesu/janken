@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
   return (
     <CurrentUserIdProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </CurrentUserIdProvider>
   );
 }
