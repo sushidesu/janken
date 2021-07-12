@@ -25,7 +25,6 @@ export interface IFirebaseClient {
   createRoom(props: CreateRoomProps): Promise<string>;
   anonymousLogin(): Promise<string | undefined>;
   canJoinRoom(props: canJoinRoomProps): Promise<boolean>;
-  getCurrentUserId(): Promise<string | undefined>;
   getUserInRoomByUserId(
     props: GetUserInRoomProps
   ): Promise<UserInRoomInputData | undefined>;

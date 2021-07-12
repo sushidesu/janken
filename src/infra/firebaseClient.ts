@@ -60,16 +60,6 @@ export class FirebaseClient implements IFirebaseClient {
     }
   }
 
-  async getCurrentUserId(): Promise<string | undefined> {
-    const id = auth.currentUser?.uid;
-    if (id) {
-      console.log("already logged in", id);
-    } else {
-      console.log("not logged in", id);
-    }
-    return id;
-  }
-
   async getUserInRoomByUserId({
     roomId,
     userId,
