@@ -6,6 +6,7 @@ import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
+import { SITE_ORIGIN } from "../../constants/metadata";
 
 type Props = {
   roomId: string | undefined;
@@ -34,6 +35,7 @@ function RoomPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
+  const invitationLink = `${SITE_ORIGIN}/join/${rid}`;
 
   const currentUserId = useCurrentUserIdContext();
   const roomValue = useRoomValue(rid);
@@ -97,11 +99,7 @@ function RoomPage({
 
       <div className={clsx("mt-10")}>
         <p>招待リンク</p>
-        <input
-          className={clsx("border-2")}
-          readOnly
-          value={"https://localhost:3000/invite/hogehoge"}
-        />
+        <input className={clsx("border-2")} readOnly value={invitationLink} />
       </div>
     </div>
   );
