@@ -26,13 +26,13 @@ export const useRoomValue = (roomId: string): Room | undefined => {
 
   // 変更を監視
   useEffect(() => {
-    const callback = roomRef.on("child_changed", (snap) => {
+    const callback = roomRef.on("value", (snap) => {
       const value = snap.val() as Room;
       setRoomValue(value);
     });
 
     return () => {
-      roomRef.off("child_changed", callback);
+      roomRef.off("value", callback);
     };
   }, []);
 
