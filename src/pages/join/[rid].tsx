@@ -32,10 +32,10 @@ function JoinPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const rid = roomId ?? "";
-  // eslint-disable-next-line
+
   const router = useJankenRouter();
   const userId = useCurrentUserIdContext();
-  const firebase = new FirebaseClient();
+  const firebaseClient = new FirebaseClient();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState("");
@@ -52,12 +52,13 @@ function JoinPage({
   const join = async () => {
     if (userId) {
       setLoading(true);
-      await firebase.joinRoom({
+      await firebaseClient.joinRoom({
         roomId: rid,
         userId: userId,
         userName: name,
         onJoinSuccess: () => {
           console.log("success!!");
+          router.push({ page: "room", roomId: rid });
         },
       });
       setLoading(false);
