@@ -1,7 +1,8 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import clsx from "clsx";
+import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
@@ -37,9 +38,20 @@ function RoomPage({
   const rid = roomId ?? "";
   const invitationLink = `${SITE_ORIGIN}/join/${rid}`;
 
+  const firebaseClient = new FirebaseClient();
+
   const currentUserId = useCurrentUserIdContext();
   const roomValue = useRoomValue(rid);
   const { room, dispatch } = useRoom();
+
+  const ready = useCallback(() => {
+    if (currentUserId) {
+      firebaseClient.ready({
+        roomId: rid,
+        userId: currentUserId,
+      });
+    }
+  }, [firebaseClient]);
 
   useEffect(() => {
     console.log(roomValue);
@@ -98,7 +110,9 @@ function RoomPage({
       </div>
 
       <div className={clsx("mt-10")}>
-        <button className={clsx("border-2")}>準備OK</button>
+        <button className={clsx("border-2")} onClick={ready}>
+          準備OK
+        </button>
       </div>
 
       <div className={clsx("mt-10")}>
