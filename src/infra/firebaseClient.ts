@@ -6,6 +6,7 @@ import {
   GetUserInRoomProps,
   UserInRoomInputData,
   JoinRoomProps,
+  ReadyProps,
 } from "../usecase/InterfaceFirebaseClient";
 import { Room, ROOM_PATH, ROOM_ROOT_NAME } from "./scheme";
 
@@ -90,6 +91,26 @@ export class FirebaseClient implements IFirebaseClient {
       }
     );
     return result.committed as boolean;
+  }
+
+  async ready({ roomId, userId }: ReadyProps): Promise<void> {
+    const roomRef = database.ref(ROOM_PATH(roomId));
+    await roomRef.transaction((maybeRoom) => {
+      if (!maybeRoom) {
+        console.log("部屋が存在しません");
+        return maybeRoom;
+      }
+
+      const room = maybeRoom as Room;
+      const { hostUserId, guestUserId } = room;
+      if (hostUserId && userId === hostUserId) {
+        room["hostReady"] = true;
+      }
+      if (guestUserId && userId === guestUserId) {
+        room["guestReady"] = true;
+      }
+      return room;
+    });
   }
 
   async getUserInRoomByUserId({

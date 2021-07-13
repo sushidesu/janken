@@ -15,6 +15,11 @@ export type JoinRoomProps = {
   onJoinSuccess?: () => void;
 };
 
+export type ReadyProps = {
+  roomId: string;
+  userId: string;
+};
+
 export type GetUserInRoomProps = {
   roomId: string;
   userId: string;
@@ -33,6 +38,7 @@ export interface IFirebaseClient {
   anonymousLogin(): Promise<string | undefined>;
   canJoinRoom(props: canJoinRoomProps): Promise<boolean>;
   joinRoom(props: JoinRoomProps): Promise<boolean>;
+  ready(props: ReadyProps): Promise<void>;
   getUserInRoomByUserId(
     props: GetUserInRoomProps
   ): Promise<UserInRoomInputData | undefined>;

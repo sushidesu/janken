@@ -25,8 +25,10 @@ export type Room = {
   hands?: KeyValue<HandHistory>;
   hostUserId: string | undefined;
   hostUserName: string | undefined;
+  hostReady?: boolean;
   guestUserId?: string;
   guestUserName?: string;
+  guestReady?: boolean;
 };
 
 export type HandHistory = {

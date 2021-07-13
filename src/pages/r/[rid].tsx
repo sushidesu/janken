@@ -46,7 +46,7 @@ function RoomPage({
     if (roomValue && currentUserId) {
       const { hostUserId, hostUserName, guestUserId, guestUserName } =
         roomValue;
-      // ホスト
+      // ホスト参加
       if (hostUserId && hostUserName) {
         dispatch({
           type: hostUserId === currentUserId ? "enterPlayer" : "enterOpponent",
@@ -56,7 +56,7 @@ function RoomPage({
           },
         });
       }
-      // ゲスト
+      // ゲスト参加
       if (guestUserId && guestUserName) {
         dispatch({
           type: guestUserId === currentUserId ? "enterPlayer" : "enterOpponent",
@@ -89,11 +89,16 @@ function RoomPage({
         <div>
           <p>自分</p>
           <UserName name={room.player?.name} />
+          <div>{}</div>
         </div>
         <div>
           <p>相手</p>
           <UserName name={room.opponent?.name} />
         </div>
+      </div>
+
+      <div className={clsx("mt-10")}>
+        <button className={clsx("border-2")}>準備OK</button>
       </div>
 
       <div className={clsx("mt-10")}>
