@@ -2,9 +2,6 @@ import { database, auth } from "../plugins/firebase";
 import {
   IFirebaseClient,
   CreateRoomProps,
-  canJoinRoomProps,
-  GetUserInRoomProps,
-  UserInRoomInputData,
   JoinRoomProps,
   ReadyProps,
 } from "../usecase/InterfaceFirebaseClient";
@@ -32,34 +29,6 @@ export class FirebaseClient implements IFirebaseClient {
     const credential = await auth.signInAnonymously();
     console.log("login anonymously", credential.user?.uid);
     return credential.user?.uid;
-  }
-
-  public async canJoinRoom({
-    roomId,
-    userId,
-  }: canJoinRoomProps): Promise<boolean> {
-    const roomRef = database.ref(ROOM_PATH(roomId));
-    const snap = await roomRef.once("value");
-    if (!snap.exists()) {
-      // 部屋が存在しない
-      return false;
-    }
-    if (!userId) {
-      // ログイン済みのみ部屋に参加可能
-      return false;
-    }
-
-    const room = snap.val() as Room;
-    if (!room.guestUserId) {
-      // 空きがある
-      return true;
-    } else if (room.guestUserId === userId || room.hostUserId === userId) {
-      // すでに入室済み
-      return true;
-    } else {
-      // 空きがない
-      return false;
-    }
   }
 
   public async joinRoom({
@@ -111,34 +80,5 @@ export class FirebaseClient implements IFirebaseClient {
       }
       return room;
     });
-  }
-
-  async getUserInRoomByUserId({
-    roomId,
-    userId,
-  }: GetUserInRoomProps): Promise<UserInRoomInputData | undefined> {
-    const path = ROOM_PATH(roomId);
-    const roomSnap = await database.ref(path).once("value");
-    const room = roomSnap.val() as Room | undefined;
-    console.log({
-      path: path,
-      exist: roomSnap.exists(),
-      value: room,
-    });
-    if (!room) {
-      return undefined;
-    }
-    if (room.hostUserId === userId) {
-      // host
-      const name = room.hostUserName ?? "";
-      return new UserInRoomInputData(userId, name, "host");
-    } else if (room.guestUserId === userId) {
-      // guest
-      const name = room.guestUserName ?? "";
-      return new UserInRoomInputData(userId, name, "guest");
-    } else {
-      // 存在しない
-      return undefined;
-    }
   }
 }
