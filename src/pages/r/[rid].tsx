@@ -8,6 +8,7 @@ import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 import { SITE_ORIGIN } from "../../constants/metadata";
+import { Ready } from "../../components/Ready";
 
 type Props = {
   roomId: string | undefined;
@@ -81,6 +82,27 @@ function RoomPage({
     }
   }, [roomValue, currentUserId]);
 
+  useEffect(() => {
+    if (roomValue && currentUserId) {
+      if (roomValue.hostReady && roomValue.hostUserId) {
+        dispatch({
+          type:
+            roomValue.hostUserId === currentUserId
+              ? "readyPlayer"
+              : "readyOpponent",
+        });
+      }
+      if (roomValue.guestReady && roomValue.guestUserId) {
+        dispatch({
+          type:
+            roomValue.guestUserId === currentUserId
+              ? "readyPlayer"
+              : "readyOpponent",
+        });
+      }
+    }
+  }, [roomValue, currentUserId]);
+
   return (
     <div
       className={clsx(
@@ -101,11 +123,12 @@ function RoomPage({
         <div>
           <p>自分</p>
           <UserName name={room.player?.name} />
-          <div>{}</div>
+          <Ready ready={room.player?.ready} />
         </div>
         <div>
           <p>相手</p>
           <UserName name={room.opponent?.name} />
+          <Ready ready={room.opponent?.ready} />
         </div>
       </div>
 
