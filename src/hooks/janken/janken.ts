@@ -1,42 +1,39 @@
 import { JankenHand } from "./jankenHand";
 import { JankenResult } from "./jankenResult";
-import { User } from "./user";
 
 export class Janken {
-  constructor(private readonly playerA: User, private readonly playerB: User) {}
-
-  public pon(playerAHand: JankenHand, playerBHand: JankenHand): JankenResult {
+  public pon(playerHand: JankenHand, opponentHand: JankenHand): JankenResult {
     // あいこ
-    if (playerAHand.sameValueAs(playerBHand)) {
+    if (playerHand.sameValueAs(opponentHand)) {
       return {
         type: "draw",
-        hand: playerAHand,
+        hand: playerHand,
       };
     } else {
-      // Aの勝ち
-      if (playerAHand.canIWin(playerBHand)) {
+      // playerの勝ち
+      if (playerHand.canIWin(opponentHand)) {
         return {
           type: "game",
           winner: {
-            user: this.playerA,
-            hand: playerAHand,
+            user: "player",
+            hand: playerHand,
           },
           loser: {
-            user: this.playerB,
-            hand: playerBHand,
+            user: "opponent",
+            hand: opponentHand,
           },
         };
-        // Bの勝ち
+        // opponentの勝ち
       } else {
         return {
           type: "game",
           winner: {
-            user: this.playerB,
-            hand: playerBHand,
+            user: "opponent",
+            hand: opponentHand,
           },
           loser: {
-            user: this.playerA,
-            hand: playerAHand,
+            user: "player",
+            hand: playerHand,
           },
         };
       }

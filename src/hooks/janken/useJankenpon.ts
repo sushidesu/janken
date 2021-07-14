@@ -1,98 +1,85 @@
-import { useEffect, useCallback, useState } from "react";
-import { database } from "../../plugins/firebase";
+import { useEffect, useState } from "react";
 import { Hand, JankenHand } from "./jankenHand";
 import { JankenResult } from "./jankenResult";
-import { User } from "./user";
 import { Janken } from "./janken";
 
-type Pon = (hand: Hand) => void;
-
-type JankenPonResponse =
-  | {
-      status: "waiting" | "loading";
-    }
-  | {
-      status: "done";
-      result: JankenResult;
-    };
-
-type History = {
-  hand: Hand;
-  user: string;
+export type UseJankenPonProps = {
+  currentUserId: string | undefined;
+  hostId: string | undefined;
+  guestId: string | undefined;
+  hostHand: string | undefined;
+  guestHand: string | undefined;
 };
 
-export const useJankenpon = (
-  roomId: string,
-  playerA: User,
-  playerB: User
-): {
-  value: JankenPonResponse;
-  playerAHand: Hand | undefined;
-  playerBHand: Hand | undefined;
-  ponPlayerA: Pon;
-  disable: boolean;
-} => {
-  const [disable, setDisable] = useState<boolean>(false);
-  const [playerAHand, setPlayerAHand] = useState<Hand | undefined>(undefined);
-  const [playerBHand, setPlayerBHand] = useState<Hand | undefined>(undefined);
+export type UseJankenPonResponse = {
+  result: { status: "waiting" } | { status: "game"; value: JankenResult };
+  playerHand: Hand | undefined;
+  opponentHand: Hand | undefined;
+};
 
-  const roomRef = database.ref(`room/${roomId}`);
-  const HAND_PATH = "hand";
+const castHand = (maybeHand: string): Hand => {
+  if (
+    maybeHand === "rock" ||
+    maybeHand === "paper" ||
+    maybeHand === "scissors"
+  ) {
+    return maybeHand;
+  } else {
+    return "rock";
+  }
+};
+
+export const useJankenpon = ({
+  currentUserId,
+  hostId,
+  guestId,
+  hostHand,
+  guestHand,
+}: UseJankenPonProps): UseJankenPonResponse => {
+  const [playerHand, setPlayerHand] = useState<Hand | undefined>(undefined);
+  const [opponentHand, setOpponentHand] = useState<Hand | undefined>(undefined);
 
   useEffect(() => {
-    console.log("on");
-    roomRef
-      .child(HAND_PATH)
-      .limitToLast(2)
-      .on("child_added", (snap) => {
-        const value = snap.val() as History;
-        console.log(value);
-        if (value.user === playerA.id) {
-          setDisable(true);
-          setPlayerAHand(value.hand);
+    if (currentUserId) {
+      if (hostHand) {
+        if (currentUserId === hostId) {
+          setPlayerHand(castHand(hostHand));
         } else {
-          setPlayerBHand(value.hand);
+          setOpponentHand(castHand(hostHand));
         }
-      });
+      }
+      if (guestHand) {
+        if (currentUserId === guestId) {
+          setPlayerHand(castHand(guestHand));
+        } else {
+          setOpponentHand(castHand(guestHand));
+        }
+      }
+    }
+  }, [currentUserId, hostHand, guestHand, hostId, guestId]);
 
-    return () => {
-      console.log("off");
-      roomRef.child(HAND_PATH).off();
-    };
-  }, []);
-
-  const ponPlayerA = useCallback((hand: Hand) => {
-    roomRef.child(HAND_PATH).push({
-      hand: hand,
-      user: playerA.id,
-    });
-  }, []);
-
-  if (!playerAHand || !playerBHand) {
+  if (!playerHand || !opponentHand) {
     return {
-      value: {
+      playerHand,
+      opponentHand,
+      result: {
         status: "waiting",
       },
-      ponPlayerA,
-      playerAHand,
-      playerBHand,
-      disable,
     };
   }
 
-  const janken = new Janken(playerA, playerB);
+  const janken = new Janken();
   const result = janken.pon(
-    new JankenHand(playerAHand),
-    new JankenHand(playerBHand)
+    new JankenHand(playerHand),
+    new JankenHand(opponentHand)
   );
+
   return {
-    value: {
-      status: "done",
-      result,
+    playerHand,
+    opponentHand,
+    result: {
+      status: "game",
+      value: result,
     },
-    ponPlayerA,
-    playerAHand,
-    playerBHand,
-    disable,
   };
 };

@@ -7,9 +7,15 @@ import { Ready } from "../Ready";
 import { JankenButton } from "../JankenButton";
 import { JankenButtonContainer } from "../JankenButtonContainer";
 import { Hand } from "../../hooks/janken/jankenHand";
+import { HandViewer } from "../HandViewer";
+import { Result } from "./Result";
 
 export type Props = Room & {
   status: RoomStatus;
+  result: "game" | "draw" | undefined;
+  winner: string | undefined;
+  playerHand: Hand | undefined;
+  opponentHand: Hand | undefined;
   invitationLink: string;
   onReadyClick: () => void;
   onHandClick: (hand: Hand) => void;
@@ -17,8 +23,12 @@ export type Props = Room & {
 
 export function JankenTemplate({
   status,
+  result,
+  winner,
   player,
+  playerHand,
   opponent,
+  opponentHand,
   invitationLink,
   onReadyClick,
   onHandClick,
@@ -33,12 +43,25 @@ export function JankenTemplate({
         <div>
           <p>自分</p>
           <UserName name={player?.name} />
-          <Ready ready={player?.ready} />
+          {status === "waitingPlayersReady" ? (
+            <Ready ready={player?.ready} />
+          ) : null}
+          {status === "waitingPlayersHand" || status === "result" ? (
+            <HandViewer hand={playerHand} />
+          ) : null}
+        </div>
+        <div>
+          <Result status={result} winner={winner} />
         </div>
         <div>
           <p>相手</p>
           <UserName name={opponent?.name} />
-          <Ready ready={opponent?.ready} />
+          {status === "waitingPlayersReady" ? (
+            <Ready ready={opponent?.ready} />
+          ) : null}
+          {status === "waitingPlayersHand" || status === "result" ? (
+            <HandViewer hand={opponentHand} />
+          ) : null}
         </div>
       </div>
       {status === "waitingPlayersHand" ? (

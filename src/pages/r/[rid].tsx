@@ -4,6 +4,7 @@ import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
+import { useJankenpon } from "../../hooks/janken/useJankenpon";
 import { SITE_ORIGIN } from "../../constants/metadata";
 import { JankenTemplate } from "../../components/janken/JankenTemplate";
 import { Hand } from "../../hooks/janken/jankenHand";
@@ -46,9 +47,38 @@ function RoomPage({
     guestId: roomValue?.guestUserId,
     hostReady: roomValue?.hostReady,
     guestReady: roomValue?.guestReady,
-    hostHand: undefined,
-    guestHand: undefined,
+    hostHand: roomValue?.hostHand,
+    guestHand: roomValue?.guestHand,
   });
+
+  const { playerHand, opponentHand, result } = useJankenpon({
+    currentUserId,
+    hostId: roomValue?.hostUserId,
+    guestId: roomValue?.guestUserId,
+    hostHand: roomValue?.hostHand,
+    guestHand: roomValue?.guestHand,
+  });
+
+  const gameResult = (): "game" | "draw" | undefined => {
+    if (result.status === "waiting") {
+      return undefined;
+    } else {
+      return result.value.type === "game" ? "game" : "draw";
+    }
+  };
+  const winner = (): string | undefined => {
+    if (result.status === "waiting") {
+      return undefined;
+    } else {
+      if (result.value.type === "draw") {
+        return undefined;
+      } else {
+        return result.value.winner.user === "player"
+          ? room.player?.name
+          : room.opponent?.name;
+      }
+    }
+  };
 
   const ready = useCallback(() => {
     if (currentUserId) {
@@ -124,8 +154,12 @@ function RoomPage({
   return (
     <JankenTemplate
       status={status}
+      result={gameResult()}
+      winner={winner()}
       player={room.player}
+      playerHand={playerHand}
       opponent={room.opponent}
+      opponentHand={opponentHand}
       invitationLink={invitationLink}
       onReadyClick={ready}
       onHandClick={jankenpon}
