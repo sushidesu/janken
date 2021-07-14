@@ -17,21 +17,13 @@ export const HAND_ROOT_NAME = "hands";
 export const HAND_ROOT_PATH = (roomId: string): string =>
   `${ROOM_PATH(roomId)}/${HAND_ROOT_NAME}`;
 
-export type KeyValue<T> = {
-  [id: string]: T;
-};
-
 export type Room = {
-  hands?: KeyValue<HandHistory>;
   hostUserId: string | undefined;
   hostUserName: string | undefined;
   hostReady?: boolean;
+  hostHand?: string | undefined;
   guestUserId?: string;
   guestUserName?: string;
   guestReady?: boolean;
-};
-
-export type HandHistory = {
-  userId: string;
-  hand: string;
+  guestHand?: string | undefined;
 };

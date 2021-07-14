@@ -15,9 +15,16 @@ export type ReadyProps = {
   userId: string;
 };
 
+export type JankenPonProps = {
+  roomId: string;
+  userId: string;
+  hand: "rock" | "paper" | "scissors";
+};
+
 export interface IFirebaseClient {
   createRoom(props: CreateRoomProps): Promise<string>;
   anonymousLogin(): Promise<string | undefined>;
   joinRoom(props: JoinRoomProps): Promise<boolean>;
   ready(props: ReadyProps): Promise<void>;
+  jankenpon(props: JankenPonProps): Promise<void>;
 }

@@ -4,6 +4,7 @@ import {
   CreateRoomProps,
   JoinRoomProps,
   ReadyProps,
+  JankenPonProps,
 } from "../usecase/InterfaceFirebaseClient";
 import { Room, ROOM_PATH, ROOM_ROOT_NAME } from "./scheme";
 
@@ -77,6 +78,24 @@ export class FirebaseClient implements IFirebaseClient {
       }
       if (guestUserId && userId === guestUserId) {
         room["guestReady"] = true;
+      }
+      return room;
+    });
+  }
+
+  async jankenpon({ roomId, userId, hand }: JankenPonProps): Promise<void> {
+    const roomRef = database.ref(ROOM_PATH(roomId));
+    await roomRef.transaction((maybeRoom) => {
+      if (!maybeRoom) {
+        return maybeRoom;
+      }
+      const room = maybeRoom as Room;
+      const { hostUserId, guestUserId } = room;
+      if (hostUserId && userId === hostUserId) {
+        room["hostHand"] = hand;
+      }
+      if (guestUserId && userId === guestUserId) {
+        room["guestHand"] = hand;
       }
       return room;
     });
