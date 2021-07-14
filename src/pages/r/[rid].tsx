@@ -6,6 +6,7 @@ import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 import { SITE_ORIGIN } from "../../constants/metadata";
 import { JankenTemplate } from "../../components/janken/JankenTemplate";
+import { Hand } from "../../hooks/janken/jankenHand";
 
 type Props = {
   roomId: string | undefined;
@@ -57,6 +58,19 @@ function RoomPage({
       });
     }
   }, [firebaseClient]);
+
+  const jankenpon = useCallback(
+    (hand: Hand) => {
+      if (currentUserId) {
+        firebaseClient.jankenpon({
+          roomId: rid,
+          userId: currentUserId,
+          hand,
+        });
+      }
+    },
+    [firebaseClient]
+  );
 
   useEffect(() => {
     console.log(roomValue);
@@ -114,6 +128,7 @@ function RoomPage({
       opponent={room.opponent}
       invitationLink={invitationLink}
       onReadyClick={ready}
+      onHandClick={jankenpon}
     />
   );
 }
