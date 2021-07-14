@@ -8,6 +8,7 @@ import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 import { SITE_ORIGIN } from "../../constants/metadata";
+import { Layout } from "../../components/Layout";
 import { Ready } from "../../components/Ready";
 
 type Props = {
@@ -104,21 +105,10 @@ function RoomPage({
   }, [roomValue, currentUserId]);
 
   return (
-    <div
-      className={clsx(
-        "max-w-md",
-        "mx-auto",
-        "flex",
-        "flex-col",
-        "justify-center",
-        "items-center"
-      )}
-    >
+    <Layout>
       <Head>
         <title>じゃんけんオンライン</title>
       </Head>
-      <h1 className={clsx("mt-10", "font-bold", "text-xl")}>Janken</h1>
-
       <div className={clsx("mt-10", "flex", "space-x-10")}>
         <div>
           <p>自分</p>
@@ -142,7 +132,7 @@ function RoomPage({
         <p>招待リンク</p>
         <input className={clsx("border-2")} readOnly value={invitationLink} />
       </div>
-    </div>
+    </Layout>
   );
 }
 

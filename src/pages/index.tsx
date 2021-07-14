@@ -5,6 +5,7 @@ import { useJankenRouter } from "../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../hooks/firebase/useCurrentUserId";
 import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
+import { Layout } from "../components/Layout";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
@@ -25,20 +26,10 @@ function Index(): JSX.Element {
   }, [createRoom, router, name]);
 
   return (
-    <div
-      className={clsx(
-        "max-w-md",
-        "mx-auto",
-        "flex",
-        "flex-col",
-        "justify-center",
-        "items-center"
-      )}
-    >
+    <Layout>
       <Head>
         <title>じゃんけんオンライン</title>
       </Head>
-      <h1 className={clsx("mt-10", "font-bold", "text-xl")}>Janken</h1>
       <input
         className={clsx("border-2")}
         onBlur={(e) => {
@@ -50,7 +41,7 @@ function Index(): JSX.Element {
       ) : (
         <div>loading...</div>
       )}
-    </div>
+    </Layout>
   );
 }
 
