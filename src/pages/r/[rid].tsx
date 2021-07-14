@@ -1,15 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Head from "next/head";
 import { useCallback, useEffect } from "react";
-import clsx from "clsx";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { useRoom } from "../../hooks/room/useRoom";
-import { UserName } from "../../components/UserName";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 import { SITE_ORIGIN } from "../../constants/metadata";
-import { Layout } from "../../components/Layout";
-import { Ready } from "../../components/Ready";
+import { JankenTemplate } from "../../components/janken/JankenTemplate";
 
 type Props = {
   roomId: string | undefined;
@@ -105,34 +101,13 @@ function RoomPage({
   }, [roomValue, currentUserId]);
 
   return (
-    <Layout>
-      <Head>
-        <title>じゃんけんオンライン</title>
-      </Head>
-      <div className={clsx("mt-10", "flex", "space-x-10")}>
-        <div>
-          <p>自分</p>
-          <UserName name={room.player?.name} />
-          <Ready ready={room.player?.ready} />
-        </div>
-        <div>
-          <p>相手</p>
-          <UserName name={room.opponent?.name} />
-          <Ready ready={room.opponent?.ready} />
-        </div>
-      </div>
-
-      <div className={clsx("mt-10")}>
-        <button className={clsx("border-2")} onClick={ready}>
-          準備OK
-        </button>
-      </div>
-
-      <div className={clsx("mt-10")}>
-        <p>招待リンク</p>
-        <input className={clsx("border-2")} readOnly value={invitationLink} />
-      </div>
-    </Layout>
+    <JankenTemplate
+      status={room.status}
+      player={room.player}
+      opponent={room.opponent}
+      invitationLink={invitationLink}
+      onReadyClick={ready}
+    />
   );
 }
 

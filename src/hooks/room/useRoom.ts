@@ -5,15 +5,49 @@ type User = {
   name: string;
   ready: boolean;
 };
-type Room = {
+export type RoomStatus =
+  | "waitingPlayersEnter"
+  | "waitingPlayersReady"
+  | "waitingPlayersHand"
+  | "result";
+export type Room = {
   player: User | undefined;
   opponent: User | undefined;
+  status: RoomStatus;
 };
 type RoomAction =
   | { type: "enterPlayer"; payload: Omit<User, "ready"> }
   | { type: "enterOpponent"; payload: Omit<User, "ready"> }
   | { type: "readyPlayer" }
   | { type: "readyOpponent" };
+
+const calcStatus = (prev: Room, action: RoomAction): RoomStatus => {
+  switch (action.type) {
+    case "enterPlayer":
+      if (prev.status === "waitingPlayersEnter" && prev.opponent) {
+        return "waitingPlayersReady";
+      }
+      break;
+    case "enterOpponent":
+      if (prev.status === "waitingPlayersEnter" && prev.player) {
+        return "waitingPlayersReady";
+      }
+      break;
+    case "readyPlayer":
+      if (prev.status === "waitingPlayersReady" && prev.opponent?.ready) {
+        return "waitingPlayersHand";
+      }
+      break;
+    case "readyOpponent":
+      if (prev.status === "waitingPlayersReady" && prev.player?.ready) {
+        return "waitingPlayersHand";
+      }
+      break;
+    default:
+      return prev.status;
+  }
+  return prev.status;
+};
 
 export const useRoom = (): {
   room: Room;
@@ -28,6 +62,7 @@ export const useRoom = (): {
             ...action.payload,
             ready: false,
           },
+          status: calcStatus(prev, action),
         };
       case "enterOpponent":
         return {
@@ -36,6 +71,7 @@ export const useRoom = (): {
             ...action.payload,
             ready: false,
           },
+          status: calcStatus(prev, action),
         };
       case "readyPlayer":
         if (prev.player) {
@@ -45,10 +81,10 @@ export const useRoom = (): {
               ...prev.player,
               ready: true,
             },
+            status: calcStatus(prev, action),
           };
-        } else {
-          return prev;
         }
+        break;
       case "readyOpponent":
         if (prev.opponent) {
           return {
@@ -57,18 +93,20 @@ export const useRoom = (): {
               ...prev.opponent,
               ready: true,
             },
+            status: calcStatus(prev, action),
           };
-        } else {
-          return prev;
         }
+        break;
       default:
         return prev;
     }
+    return prev;
   };
 
   const init: Room = {
     player: undefined,
     opponent: undefined,
+    status: "waitingPlayersEnter",
   };
 
   const [room, dispatch] = useReducer(reducer, init);
