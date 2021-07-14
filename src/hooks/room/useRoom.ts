@@ -1,4 +1,4 @@
-import { useReducer, Reducer, Dispatch } from "react";
+import { useState, useEffect, useReducer, Reducer, Dispatch } from "react";
 
 type User = {
   id: string;
@@ -13,7 +13,6 @@ export type RoomStatus =
 export type Room = {
   player: User | undefined;
   opponent: User | undefined;
-  status: RoomStatus;
 };
 type RoomAction =
   | { type: "enterPlayer"; payload: Omit<User, "ready"> }
@@ -21,37 +20,21 @@ type RoomAction =
   | { type: "readyPlayer" }
   | { type: "readyOpponent" };
 
-const calcStatus = (prev: Room, action: RoomAction): RoomStatus => {
-  switch (action.type) {
-    case "enterPlayer":
-      if (prev.status === "waitingPlayersEnter" && prev.opponent) {
-        return "waitingPlayersReady";
-      }
-      break;
-    case "enterOpponent":
-      if (prev.status === "waitingPlayersEnter" && prev.player) {
-        return "waitingPlayersReady";
-      }
-      break;
-    case "readyPlayer":
-      if (prev.status === "waitingPlayersReady" && prev.opponent?.ready) {
-        return "waitingPlayersHand";
-      }
-      break;
-    case "readyOpponent":
-      if (prev.status === "waitingPlayersReady" && prev.player?.ready) {
-        return "waitingPlayersHand";
-      }
-      break;
-    default:
-      return prev.status;
-  }
-  return prev.status;
+type CurrentRoomValue = {
+  hostId: string | undefined;
+  guestId: string | undefined;
+  hostReady: boolean | undefined;
+  guestReady: boolean | undefined;
+  hostHand: string | undefined;
+  guestHand: string | undefined;
 };
 
-export const useRoom = (): {
+export const useRoom = (
+  currentValue: CurrentRoomValue
+): {
   room: Room;
   dispatch: Dispatch<RoomAction>;
+  status: RoomStatus;
 } => {
   const reducer: Reducer<Room, RoomAction> = (prev, action) => {
     switch (action.type) {
@@ -62,7 +45,6 @@ export const useRoom = (): {
             ...action.payload,
             ready: false,
           },
-          status: calcStatus(prev, action),
         };
       case "enterOpponent":
         return {
@@ -71,7 +53,6 @@ export const useRoom = (): {
             ...action.payload,
             ready: false,
           },
-          status: calcStatus(prev, action),
         };
       case "readyPlayer":
         if (prev.player) {
@@ -81,7 +62,6 @@ export const useRoom = (): {
               ...prev.player,
               ready: true,
             },
-            status: calcStatus(prev, action),
           };
         }
         break;
@@ -93,7 +73,6 @@ export const useRoom = (): {
               ...prev.opponent,
               ready: true,
             },
-            status: calcStatus(prev, action),
           };
         }
         break;
@@ -106,12 +85,26 @@ export const useRoom = (): {
   const init: Room = {
     player: undefined,
     opponent: undefined,
-    status: "waitingPlayersEnter",
   };
 
   const [room, dispatch] = useReducer(reducer, init);
+  const [status, setStatus] = useState<RoomStatus>("waitingPlayersEnter");
+  useEffect(() => {
+    const { hostId, guestId, hostReady, guestReady, hostHand, guestHand } =
+      currentValue;
+    if (hostHand && guestHand) {
+      setStatus("result");
+    } else if (hostReady && guestReady) {
+      setStatus("waitingPlayersHand");
+    } else if (hostId && guestId) {
+      setStatus("waitingPlayersReady");
+    } else {
+      setStatus("waitingPlayersEnter");
+    }
+  }, [currentValue]);
   return {
     room,
     dispatch,
+    status,
   };
 };

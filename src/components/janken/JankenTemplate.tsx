@@ -1,11 +1,12 @@
 import Head from "next/head";
 import clsx from "clsx";
-import { Room } from "../../hooks/room/useRoom";
+import { Room, RoomStatus } from "../../hooks/room/useRoom";
 import { Layout } from "../Layout";
 import { UserName } from "../UserName";
 import { Ready } from "../Ready";
 
 export type Props = Room & {
+  status: RoomStatus;
   invitationLink: string;
   onReadyClick: () => void;
 };
@@ -32,7 +33,7 @@ export function JankenTemplate({
         <div>
           <p>相手</p>
           <UserName name={opponent?.name} />
-          <Ready ready={player?.ready} />
+          <Ready ready={opponent?.ready} />
         </div>
       </div>
       {status === "waitingPlayersReady" ? (

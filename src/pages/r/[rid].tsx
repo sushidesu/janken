@@ -40,7 +40,14 @@ function RoomPage({
 
   const currentUserId = useCurrentUserIdContext();
   const roomValue = useRoomValue(rid);
-  const { room, dispatch } = useRoom();
+  const { room, dispatch, status } = useRoom({
+    hostId: roomValue?.hostUserId,
+    guestId: roomValue?.guestUserId,
+    hostReady: roomValue?.hostReady,
+    guestReady: roomValue?.guestReady,
+    hostHand: undefined,
+    guestHand: undefined,
+  });
 
   const ready = useCallback(() => {
     if (currentUserId) {
@@ -102,7 +109,7 @@ function RoomPage({
 
   return (
     <JankenTemplate
-      status={room.status}
+      status={status}
       player={room.player}
       opponent={room.opponent}
       invitationLink={invitationLink}
