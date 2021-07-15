@@ -7,6 +7,7 @@ import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
 import { Layout } from "../components/Layout";
 import { Button } from "../components/Button";
+import { Input } from "../components/Input";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
@@ -32,8 +33,9 @@ function Index(): JSX.Element {
         <title>じゃんけんオンライン</title>
       </Head>
       <div className={clsx("mt-10")}>
-        <input
-          className={clsx("border-2")}
+        <Input
+          label={"プレイヤー名"}
+          placeholder={"ほげ太郎"}
           onBlur={(e) => {
             setName(e.target.value);
           }}
