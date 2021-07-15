@@ -2,6 +2,7 @@ import Head from "next/head";
 import clsx from "clsx";
 import { Room, RoomStatus } from "../../hooks/room/useRoom";
 import { Layout } from "../Layout";
+import { Button } from "../Button";
 import { UserName } from "../UserName";
 import { Ready } from "../Ready";
 import { JankenButton } from "../JankenButton";
@@ -75,9 +76,7 @@ export function JankenTemplate({
       ) : null}
       {status === "waitingPlayersReady" ? (
         <div className={clsx("mt-10")}>
-          <button className={clsx("border-2")} onClick={onReadyClick}>
-            準備OK
-          </button>
+          <Button onClick={onReadyClick}>準備OK</Button>
         </div>
       ) : null}
       {status === "waitingPlayersEnter" ? (

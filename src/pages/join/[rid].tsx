@@ -5,6 +5,7 @@ import { useJankenRouter } from "../../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { Layout } from "../../components/Layout";
+import { Button } from "../../components/Button";
 
 export type Props = {
   roomId: string | undefined;
@@ -76,13 +77,11 @@ function JoinPage({
           }}
         />
       </div>
-      <button
-        disabled={disabled() || loading}
-        className={clsx("mt-5", "bg-blue-300", "disabled:opacity-50")}
-        onClick={join}
-      >
-        部屋に参加する
-      </button>
+      <div className={clsx("mt-10")}>
+        <Button disabled={disabled()} loading={loading} onClick={join}>
+          部屋に参加する
+        </Button>
+      </div>
     </Layout>
   );
 }

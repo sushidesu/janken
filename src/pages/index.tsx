@@ -6,6 +6,7 @@ import { useCurrentUserIdContext } from "../hooks/firebase/useCurrentUserId";
 import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
 import { Layout } from "../components/Layout";
+import { Button } from "../components/Button";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
@@ -30,17 +31,19 @@ function Index(): JSX.Element {
       <Head>
         <title>じゃんけんオンライン</title>
       </Head>
-      <input
-        className={clsx("border-2")}
-        onBlur={(e) => {
-          setName(e.target.value);
-        }}
-      />
-      {userId ? (
-        <button onClick={handleClick}>部屋を作成</button>
-      ) : (
-        <div>loading...</div>
-      )}
+      <div className={clsx("mt-10")}>
+        <input
+          className={clsx("border-2")}
+          onBlur={(e) => {
+            setName(e.target.value);
+          }}
+        />
+      </div>
+      <div className={clsx("mt-10")}>
+        <Button disabled={name === ""} loading={!userId} onClick={handleClick}>
+          部屋を作成
+        </Button>
+      </div>
     </Layout>
   );
 }
