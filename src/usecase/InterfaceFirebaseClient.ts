@@ -8,6 +8,7 @@ export type JoinRoomProps = {
   userId: string;
   userName: string;
   onJoinSuccess?: () => void;
+  onJoinFailure?: () => void;
 };
 
 export type CanJoinRoomProps = {

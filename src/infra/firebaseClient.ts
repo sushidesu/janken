@@ -38,12 +38,12 @@ export class FirebaseClient implements IFirebaseClient {
     userId,
     userName,
     onJoinSuccess,
+    onJoinFailure,
   }: JoinRoomProps): Promise<boolean> {
     const roomRef = database.ref(ROOM_PATH(roomId));
     const result = await roomRef.transaction(
       (maybeRoom) => {
         if (!maybeRoom) {
-          console.log("部屋が存在しません");
           return maybeRoom;
         }
         const room = maybeRoom as Room;
@@ -56,6 +56,9 @@ export class FirebaseClient implements IFirebaseClient {
         return room;
       },
       (err, committed) => {
+        if (!committed && onJoinFailure) {
+          onJoinFailure();
+        }
         if (err === null && committed && onJoinSuccess) {
           onJoinSuccess();
         }
