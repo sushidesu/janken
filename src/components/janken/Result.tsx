@@ -4,7 +4,7 @@ export type Props = {
 };
 
 export function Result({ status, winner }: Props): JSX.Element | null {
-  if (!status || !winner) {
+  if (!status) {
     return null;
   }
   return (

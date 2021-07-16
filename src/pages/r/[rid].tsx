@@ -77,7 +77,7 @@ function RoomPage({
     if (result.status === "waiting") {
       return undefined;
     } else {
-      return result.value.type === "game" ? "game" : "draw";
+      return result.value.type;
     }
   };
   const winner = (): string | undefined => {
