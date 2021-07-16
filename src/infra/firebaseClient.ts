@@ -55,11 +55,11 @@ export class FirebaseClient implements IFirebaseClient {
         room["guestUserName"] = userName;
         return room;
       },
-      (err, committed) => {
-        if (!committed && onJoinFailure) {
+      (err, committed, mayBeRoom) => {
+        if ((!committed || !mayBeRoom?.exists()) && onJoinFailure) {
           onJoinFailure();
         }
-        if (err === null && committed && onJoinSuccess) {
+        if (err === null && committed && mayBeRoom?.exists() && onJoinSuccess) {
           onJoinSuccess();
         }
       }
