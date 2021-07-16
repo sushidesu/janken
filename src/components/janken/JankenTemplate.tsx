@@ -1,13 +1,14 @@
 import Head from "next/head";
 import clsx from "clsx";
 import { Room, RoomStatus } from "../../hooks/room/useRoom";
+import { Hand } from "../../hooks/janken/jankenHand";
 import { Layout } from "../Layout";
 import { Button } from "../Button";
+import { UserWrapper } from "../UserWrapper";
 import { UserName } from "../UserName";
 import { Ready } from "../Ready";
 import { JankenButton } from "../JankenButton";
 import { JankenButtonContainer } from "../JankenButtonContainer";
-import { Hand } from "../../hooks/janken/jankenHand";
 import { HandViewer } from "../HandViewer";
 import { Result } from "./Result";
 
@@ -40,8 +41,7 @@ export function JankenTemplate({
         <title>じゃんけんオンライン</title>
       </Head>
       <div className={clsx("mt-10", "flex", "space-x-10")}>
-        <div>
-          <p>自分</p>
+        <UserWrapper text="自分">
           <UserName name={player?.name} />
           {status === "waitingPlayersReady" ? (
             <Ready ready={player?.ready} />
@@ -49,12 +49,11 @@ export function JankenTemplate({
           {status === "waitingPlayersHand" || status === "result" ? (
             <HandViewer hand={playerHand} />
           ) : null}
-        </div>
+        </UserWrapper>
         <div>
           <Result status={result} winner={winner} />
         </div>
-        <div>
-          <p>相手</p>
+        <UserWrapper text="相手">
           <UserName name={opponent?.name} />
           {status === "waitingPlayersReady" ? (
             <Ready ready={opponent?.ready} />
@@ -62,7 +61,7 @@ export function JankenTemplate({
           {status === "waitingPlayersHand" || status === "result" ? (
             <HandViewer hand={opponentHand} unkown={status !== "result"} />
           ) : null}
-        </div>
+        </UserWrapper>
       </div>
       {status === "waitingPlayersHand" ? (
         <div className={clsx("mt-10")}>
