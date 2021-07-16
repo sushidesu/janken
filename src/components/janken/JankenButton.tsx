@@ -1,5 +1,5 @@
-import { Hand } from "../hooks/janken/jankenHand";
-import { Button } from "../components/Button";
+import { Hand } from "../../hooks/janken/jankenHand";
+import { Button } from "../Button";
 
 export type Props = {
   hand: Hand;

@@ -6,10 +6,10 @@ import { Layout } from "../Layout";
 import { Button } from "../Button";
 import { UserWrapper } from "../UserWrapper";
 import { UserName } from "../UserName";
-import { Ready } from "../Ready";
-import { JankenButton } from "../JankenButton";
-import { JankenButtonContainer } from "../JankenButtonContainer";
-import { HandViewer } from "../HandViewer";
+import { Ready } from "./Ready";
+import { JankenButton } from "./JankenButton";
+import { JankenButtonContainer } from "./JankenButtonContainer";
+import { HandViewer } from "./HandViewer";
 import { Result } from "./Result";
 
 export type Props = Room & {
