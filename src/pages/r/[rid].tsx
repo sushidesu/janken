@@ -1,13 +1,15 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FirebaseClient } from "../../infra/firebaseClient";
+import { useJankenRouter } from "../../controller/useJankenRouter";
 import { useRoom } from "../../hooks/room/useRoom";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useRoomValue } from "../../hooks/firebase/useRoomValue";
 import { useJankenpon } from "../../hooks/janken/useJankenpon";
 import { SITE_ORIGIN } from "../../constants/metadata";
-import { JankenTemplate } from "../../components/janken/JankenTemplate";
 import { Hand } from "../../hooks/janken/jankenHand";
+import { JankenTemplate } from "../../components/janken/JankenTemplate";
+import { JankenRoomLoading } from "../../components/janken/JankenRoomLoading";
 
 type Props = {
   roomId: string | undefined;
@@ -35,6 +37,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 function RoomPage({
   roomId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+  const router = useJankenRouter();
+  if (!roomId) {
+    router.push({ page: "top" });
+  }
   const rid = roomId ?? "";
   const invitationLink = `${SITE_ORIGIN}/join/${rid}`;
 
@@ -50,7 +56,6 @@ function RoomPage({
     hostHand: roomValue?.hostHand,
     guestHand: roomValue?.guestHand,
   });
-
   const { playerHand, opponentHand, result } = useJankenpon({
     currentUserId,
     hostId: roomValue?.hostUserId,
@@ -58,6 +63,31 @@ function RoomPage({
     hostHand: roomValue?.hostHand,
     guestHand: roomValue?.guestHand,
   });
+
+  const [idChecked, setIdChecked] = useState<boolean>(false);
+  // 初めに部屋に参加可能かを確認する
+  useEffect(() => {
+    let unmounted = false;
+    if (currentUserId) {
+      const start = async () => {
+        const joinable = await firebaseClient.canJoinRoom({
+          roomId: rid,
+          userId: currentUserId,
+        });
+        if (!joinable) {
+          router.push({ page: "top" });
+        } else {
+          if (!unmounted) {
+            setIdChecked(true);
+          }
+        }
+      };
+      start();
+    }
+    return () => {
+      unmounted = true;
+    };
+  }, [currentUserId]);
 
   const gameResult = (): "game" | "draw" | undefined => {
     if (result.status === "waiting") {
@@ -151,20 +181,24 @@ function RoomPage({
     }
   }, [roomValue, currentUserId]);
 
-  return (
-    <JankenTemplate
-      status={status}
-      result={gameResult()}
-      winner={winner()}
-      player={room.player}
-      playerHand={playerHand}
-      opponent={room.opponent}
-      opponentHand={opponentHand}
-      invitationLink={invitationLink}
-      onReadyClick={ready}
-      onHandClick={jankenpon}
-    />
-  );
+  if (idChecked) {
+    return (
+      <JankenTemplate
+        status={status}
+        result={gameResult()}
+        winner={winner()}
+        player={room.player}
+        playerHand={playerHand}
+        opponent={room.opponent}
+        opponentHand={opponentHand}
+        invitationLink={invitationLink}
+        onReadyClick={ready}
+        onHandClick={jankenpon}
+      />
+    );
+  } else {
+    return <JankenRoomLoading />;
+  }
 }
 
 export default RoomPage;

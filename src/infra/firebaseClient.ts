@@ -3,6 +3,7 @@ import {
   IFirebaseClient,
   CreateRoomProps,
   JoinRoomProps,
+  CanJoinRoomProps,
   ReadyProps,
   JankenPonProps,
 } from "../usecase/InterfaceFirebaseClient";
@@ -61,6 +62,29 @@ export class FirebaseClient implements IFirebaseClient {
       }
     );
     return result.committed as boolean;
+  }
+
+  async canJoinRoom({ roomId, userId }: CanJoinRoomProps): Promise<boolean> {
+    const roomRef = database.ref(ROOM_PATH(roomId));
+    const roomSnapshot = await roomRef.once("value");
+    // 部屋が存在しない
+    if (!roomSnapshot.exists()) {
+      return false;
+    }
+    const room = roomSnapshot.val() as Room;
+    // ホストがいない
+    if (!room.hostUserId) {
+      return false;
+    }
+
+    // ホストまたはゲストの場合のみ参加可能
+    if (userId === room.hostUserId) {
+      return true;
+    } else if (room.guestUserId && userId === room.guestUserId) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async ready({ roomId, userId }: ReadyProps): Promise<void> {
