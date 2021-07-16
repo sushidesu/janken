@@ -64,7 +64,6 @@ function JoinPage({
           router.push({ page: "room", roomId: rid });
         },
       });
-      setLoading(false);
     }
   };
 

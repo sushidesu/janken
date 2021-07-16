@@ -11,6 +11,7 @@ import { Input } from "../components/Input";
 
 function Index(): JSX.Element {
   const [name, setName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useJankenRouter();
   const userId = useCurrentUserIdContext();
 
@@ -19,6 +20,7 @@ function Index(): JSX.Element {
 
   const handleClick = useCallback(async () => {
     if (name !== "" && userId) {
+      setLoading(true);
       const roomId = await createRoom.do({
         userId: userId,
         userName: name,
@@ -42,7 +44,11 @@ function Index(): JSX.Element {
         />
       </div>
       <div className={clsx("mt-10")}>
-        <Button disabled={name === ""} loading={!userId} onClick={handleClick}>
+        <Button
+          disabled={name === ""}
+          loading={!userId || loading}
+          onClick={handleClick}
+        >
           部屋を作成
         </Button>
       </div>
