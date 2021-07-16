@@ -40,7 +40,12 @@ export function JankenTemplate({
       <Head>
         <title>じゃんけんオンライン</title>
       </Head>
-      <div className={clsx("mt-10", "flex", "space-x-10")}>
+      <div className={clsx("mt-10")}>
+        <Result status={result} winner={winner} />
+      </div>
+      <div
+        className={clsx("mt-4", "p-5", "flex", "justify-between", "min-w-full")}
+      >
         <UserWrapper text="自分">
           <UserName name={player?.name} />
           {status === "waitingPlayersReady" ? (
@@ -50,9 +55,6 @@ export function JankenTemplate({
             <HandViewer hand={playerHand} />
           ) : null}
         </UserWrapper>
-        <div>
-          <Result status={result} winner={winner} />
-        </div>
         <UserWrapper text="相手">
           <UserName name={opponent?.name} />
           {status === "waitingPlayersReady" ? (

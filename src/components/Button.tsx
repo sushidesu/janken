@@ -20,7 +20,7 @@ export function Button({
         "disabled:opacity-50",
         "disabled:cursor-not-allowed",
         "py-2",
-        "px-3",
+        "px-4",
         "rounded-sm",
         "font-bold"
       )}

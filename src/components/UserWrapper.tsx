@@ -7,7 +7,7 @@ export type Props = {
 
 export function UserWrapper({ text, children }: Props): JSX.Element {
   return (
-    <div>
+    <div className={clsx("w-full")}>
       <p className={clsx("text-gray-500", "text-sm", "text-center")}>{text}</p>
       <div
         className={clsx(

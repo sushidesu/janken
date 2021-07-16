@@ -9,7 +9,7 @@ export function Result({ status, winner }: Props): JSX.Element | null {
   }
   return (
     <div>
-      <p>{status === "game" ? `${winner}の勝ち！` : "あいこ"}</p>
+      <p>{status === "game" ? `${winner} の勝ち！` : "あいこ"}</p>
     </div>
   );
 }

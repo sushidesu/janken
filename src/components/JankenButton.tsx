@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { Hand } from "../hooks/janken/jankenHand";
+import { Button } from "../components/Button";
 
 export type Props = {
   hand: Hand;
@@ -18,13 +18,12 @@ export function JankenButton({ hand, onClick }: Props): JSX.Element {
     }
   };
   return (
-    <button
+    <Button
       onClick={() => {
         onClick(hand);
       }}
-      className={clsx("px-4", "py-1.5", "bg-blue-300", "rounded-sm")}
     >
       {label()}
-    </button>
+    </Button>
   );
 }
