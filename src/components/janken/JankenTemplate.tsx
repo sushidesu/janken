@@ -61,7 +61,7 @@ export function JankenTemplate({
             <Ready ready={opponent?.ready} />
           ) : null}
           {status === "waitingPlayersHand" || status === "result" ? (
-            <HandViewer hand={opponentHand} />
+            <HandViewer hand={opponentHand} unkown={status !== "result"} />
           ) : null}
         </div>
       </div>
