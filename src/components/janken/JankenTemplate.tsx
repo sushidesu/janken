@@ -39,7 +39,6 @@ export function JankenTemplate({
       <Head>
         <title>じゃんけんオンライン</title>
       </Head>
-      <p>{status}</p>
       <div className={clsx("mt-10", "flex", "space-x-10")}>
         <div>
           <p>自分</p>
