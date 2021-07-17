@@ -3,6 +3,7 @@ import Head from "next/head";
 import clsx from "clsx";
 import { useJankenRouter } from "../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../hooks/firebase/useCurrentUserId";
+import { useUserNameInput } from "../hooks/useUserNameInput";
 import { CreateRoomUsecase } from "../usecase/createRoom";
 import { FirebaseClient } from "../infra/firebaseClient";
 import { Layout } from "../components/Layout";
@@ -10,7 +11,7 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 
 function Index(): JSX.Element {
-  const [name, setName] = useState<string>("");
+  const { name, disabled, error, message, handleChange } = useUserNameInput();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useJankenRouter();
   const userId = useCurrentUserIdContext();
@@ -38,16 +39,14 @@ function Index(): JSX.Element {
         <Input
           label={"プレイヤー名"}
           placeholder={"ほげ太郎"}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          error={name.length > 10}
-          message={`${name.length}/10`}
+          onChange={handleChange}
+          error={error}
+          message={message}
         />
       </div>
       <div className={clsx("mt-10")}>
         <Button
-          disabled={name === ""}
+          disabled={disabled}
           loading={!userId || loading}
           onClick={handleClick}
         >

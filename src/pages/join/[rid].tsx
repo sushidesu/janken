@@ -3,6 +3,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useJankenRouter } from "../../controller/useJankenRouter";
 import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
+import { useUserNameInput } from "../../hooks/useUserNameInput";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { Layout } from "../../components/Layout";
 import { Button } from "../../components/Button";
@@ -41,16 +42,7 @@ function JoinPage({
   const firebaseClient = new FirebaseClient();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [name, setName] = useState("");
-  const disabled = (): boolean => {
-    if (!userId) {
-      return true;
-    }
-    if (name === "") {
-      return true;
-    }
-    return false;
-  };
+  const { name, disabled, error, message, handleChange } = useUserNameInput();
 
   const join = async () => {
     if (userId) {
@@ -78,13 +70,13 @@ function JoinPage({
         <Input
           label={"プレイヤー名"}
           placeholder={"じゃんけんマニア"}
-          onBlur={(e) => {
-            setName(e.target.value);
-          }}
+          onChange={handleChange}
+          error={error}
+          message={message}
         />
       </div>
       <div className={clsx("mt-10")}>
-        <Button disabled={disabled()} loading={loading} onClick={join}>
+        <Button disabled={disabled} loading={!userId || loading} onClick={join}>
           部屋に参加する
         </Button>
       </div>
