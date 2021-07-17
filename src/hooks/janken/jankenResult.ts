@@ -1,15 +1,16 @@
 import { JankenHand } from "./jankenHand";
-import { User } from "./user";
+
+export type Players = "player" | "opponent";
 
 export type JankenResult =
   | {
       type: "game";
       winner: {
-        user: User;
+        user: Players;
         hand: JankenHand;
       };
       loser: {
-        user: User;
+        user: Players;
         hand: JankenHand;
       };
     }
