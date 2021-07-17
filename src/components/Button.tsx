@@ -22,7 +22,8 @@ export function Button({
         "py-2",
         "px-4",
         "rounded-sm",
-        "font-bold"
+        "font-bold",
+        "shadow-md"
       )}
       disabled={disabled || loading}
       onClick={onClick}
