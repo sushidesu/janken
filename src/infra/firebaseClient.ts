@@ -47,6 +47,10 @@ export class FirebaseClient implements IFirebaseClient {
           return maybeRoom;
         }
         const room = maybeRoom as Room;
+        if (room.hostUserId === userId || room.guestUserId === userId) {
+          console.log("すでに参加しています");
+          return room;
+        }
         if (room.guestUserId) {
           console.log("満室です");
           return;
