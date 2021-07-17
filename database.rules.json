@@ -4,7 +4,15 @@
     ".write": false,
     "rooms": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+      "$rid": {
+        "hostUserName": {
+          ".validate": "newData.val().length <= 10"
+        },
+        "guestUserName": {
+          ".validate": "newData.val().length <= 10"
+        }
+      }
     }
   }
 }
