@@ -18,12 +18,15 @@ module.exports = {
           800: "#005249",
         },
       },
+      boxShadow: {
+        amber: "0 4px 12px rgb(218 123 123 / 22%)"
+      },
     },
   },
   variants: {
     extend: {
       opacity: ["disabled"],
-      cursor: ["disabled"]
+      cursor: ["disabled"],
     },
   },
   plugins: [],
