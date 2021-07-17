@@ -12,7 +12,7 @@ export type Props = {
   icon: IconType;
 };
 
-export function ButtonWithIcon({
+export function LinkButtonWithIcon({
   children,
   href,
   targetBlank = false,

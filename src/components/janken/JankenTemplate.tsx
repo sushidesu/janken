@@ -11,7 +11,7 @@ import { JankenButton } from "./JankenButton";
 import { JankenButtonContainer } from "./JankenButtonContainer";
 import { HandViewer } from "./HandViewer";
 import { Result } from "./Result";
-import { ButtonWithIcon } from "../ButtonWithIcon";
+import { LinkButtonWithIcon } from "../LinkButtonWithIcon";
 import { FaTwitter } from "react-icons/fa";
 
 export type Props = Room & {
@@ -82,13 +82,13 @@ export function JankenTemplate({
               対戦相手を招待してください
             </p>
             <div className={clsx("mt-10")}>
-              <ButtonWithIcon
+              <LinkButtonWithIcon
                 href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${invitationLink}&text=対戦相手募集中...`}
                 targetBlank
                 icon={FaTwitter}
               >
                 招待リンクをツイート
-              </ButtonWithIcon>
+              </LinkButtonWithIcon>
             </div>
             <div className={clsx("mt-5", "mx-10")}>
               <span className={clsx("text-sm", "ml-5", "text-gray-500")}>
