@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState, useCallback } from "react";
 import Head from "next/head";
 import clsx from "clsx";
 import { useJankenRouter } from "../controller/useJankenRouter";
@@ -38,9 +38,11 @@ function Index(): JSX.Element {
         <Input
           label={"プレイヤー名"}
           placeholder={"ほげ太郎"}
-          onBlur={(e) => {
+          onChange={(e) => {
             setName(e.target.value);
           }}
+          error={name.length > 10}
+          message={`${name.length}/10`}
         />
       </div>
       <div className={clsx("mt-10")}>

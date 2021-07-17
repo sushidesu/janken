@@ -6,13 +6,15 @@ export type Props = {
   onBlur?: JSX.IntrinsicElements["input"]["onBlur"];
   value?: JSX.IntrinsicElements["input"]["value"];
   placeholder?: JSX.IntrinsicElements["input"]["placeholder"];
+  error?: boolean;
+  message?: string;
 };
 
-export function Input({ label, ...rest }: Props): JSX.Element {
+export function Input({ label, error, message, ...rest }: Props): JSX.Element {
   return (
     <div className={clsx("space-y-1")}>
       {label ? (
-        <label className={clsx("block", "text-sm", "text-gray-800")}>
+        <label className={clsx("block", "text-sm", "text-gray-800", "mb-1")}>
           {label}
         </label>
       ) : null}
@@ -28,10 +30,15 @@ export function Input({ label, ...rest }: Props): JSX.Element {
           "leading-tight",
           "focus:outline-none",
           "focus:ring",
-          "focus:border-blue-300"
+          error ? "focus:border-red-300" : "focus:border-blue-300",
+          error && "focus:ring-red-300",
+          error && "border-red-400"
         )}
         {...rest}
       />
+      <p className={clsx("text-sm", error ? "text-red-400" : "text-gray-400")}>
+        {message}
+      </p>
     </div>
   );
 }
