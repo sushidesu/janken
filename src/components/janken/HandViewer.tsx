@@ -5,7 +5,7 @@ export type Hand = "rock" | "paper" | "scissors";
 
 export type Props = {
   hand: Hand | undefined;
-  unkown?: boolean;
+  unknown?: boolean;
 };
 
 const HAND_EMOJI: {
@@ -16,8 +16,8 @@ const HAND_EMOJI: {
   scissors: "✌",
 };
 
-export function HandViewer({ hand, unkown }: Props): JSX.Element {
-  if (hand && !unkown) {
+export function HandViewer({ hand, unknown }: Props): JSX.Element {
+  if (hand && !unknown) {
     return <p className={clsx("font-bold", "text-3xl")}>{HAND_EMOJI[hand]}</p>;
   } else {
     return <p className={clsx("font-bold", "text-3xl")}>{"?"}</p>;
