@@ -1,5 +1,6 @@
 import Link from "next/link";
 import clsx from "clsx";
+import { SITE_TITLE } from "../constants/metadata";
 import { TOP_PAGE } from "../constants/pagePath";
 import { FaRegCopyright } from "react-icons/fa";
 
@@ -38,7 +39,7 @@ export function Layout({ children }: Props): JSX.Element {
         <header>
           <Link href={TOP_PAGE} passHref>
             <a className={clsx("mt-10", "font-bold", "text-xl")}>
-              じゃんけんオンライン
+              {SITE_TITLE}
             </a>
           </Link>
         </header>

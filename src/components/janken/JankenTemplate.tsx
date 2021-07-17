@@ -1,8 +1,8 @@
-import Head from "next/head";
 import clsx from "clsx";
 import { Room, RoomStatus } from "../../hooks/room/useRoom";
 import { Hand } from "../../hooks/janken/jankenHand";
 import { Layout } from "../Layout";
+import { HeadWithMetadata } from "../HeadWithMetadata";
 import { Button } from "../Button";
 import { UserWrapper } from "../UserWrapper";
 import { UserName } from "../UserName";
@@ -39,9 +39,7 @@ export function JankenTemplate({
 }: Props): JSX.Element {
   return (
     <Layout>
-      <Head>
-        <title>じゃんけんオンライン</title>
-      </Head>
+      <HeadWithMetadata />
       <div className={clsx("mt-10")}>
         <Result status={result} winner={winner} />
       </div>

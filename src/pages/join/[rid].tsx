@@ -1,5 +1,4 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Head from "next/head";
 import { useState } from "react";
 import clsx from "clsx";
 import { useJankenRouter } from "../../controller/useJankenRouter";
@@ -7,6 +6,7 @@ import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useUserNameInput } from "../../hooks/useUserNameInput";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { Layout } from "../../components/Layout";
+import { HeadWithMetadata } from "../../components/HeadWithMetadata";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 
@@ -67,9 +67,7 @@ function JoinPage({
 
   return (
     <Layout>
-      <Head>
-        <title>じゃんけんオンライン</title>
-      </Head>
+      <HeadWithMetadata />
       <div className={clsx("mt-10")}>
         <Input
           label={"プレイヤー名"}
