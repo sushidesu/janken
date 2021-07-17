@@ -65,26 +65,28 @@ export function JankenTemplate({
           ) : null}
         </UserWrapper>
       </div>
-      {status === "waitingPlayersHand" ? (
-        <div className={clsx("mt-10")}>
+      <div className={clsx("mt-10")}>
+        {status === "waitingPlayersHand" ? (
           <JankenButtonContainer>
             <JankenButton hand="rock" onClick={onHandClick} />
             <JankenButton hand="scissors" onClick={onHandClick} />
             <JankenButton hand="paper" onClick={onHandClick} />
           </JankenButtonContainer>
-        </div>
-      ) : null}
-      {status === "waitingPlayersReady" ? (
-        <div className={clsx("mt-10")}>
+        ) : null}
+        {status === "waitingPlayersReady" ? (
           <Button onClick={onReadyClick}>準備OK</Button>
-        </div>
-      ) : null}
-      {status === "waitingPlayersEnter" ? (
-        <div className={clsx("mt-10")}>
-          <p>招待リンク</p>
-          <input className={clsx("border-2")} readOnly value={invitationLink} />
-        </div>
-      ) : null}
+        ) : null}
+        {status === "waitingPlayersEnter" ? (
+          <div>
+            <p>招待リンク</p>
+            <input
+              className={clsx("border-2")}
+              readOnly
+              value={invitationLink}
+            />
+          </div>
+        ) : null}
+      </div>
     </Layout>
   );
 }
