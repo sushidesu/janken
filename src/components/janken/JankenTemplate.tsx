@@ -11,6 +11,8 @@ import { JankenButton } from "./JankenButton";
 import { JankenButtonContainer } from "./JankenButtonContainer";
 import { HandViewer } from "./HandViewer";
 import { Result } from "./Result";
+import { ButtonWithIcon } from "../ButtonWithIcon";
+import { FaTwitter } from "react-icons/fa";
 
 export type Props = Room & {
   status: RoomStatus;
@@ -77,13 +79,35 @@ export function JankenTemplate({
           <Button onClick={onReadyClick}>準備OK</Button>
         ) : null}
         {status === "waitingPlayersEnter" ? (
-          <div>
-            <p>招待リンク</p>
-            <input
-              className={clsx("border-2")}
-              readOnly
-              value={invitationLink}
-            />
+          <div className={clsx("flex", "flex-col", "items-center")}>
+            <p className={clsx("text-gray-500", "text-center")}>
+              対戦相手を招待してください
+            </p>
+            <div className={clsx("mt-10")}>
+              <ButtonWithIcon
+                href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${invitationLink}&text=対戦相手募集中...`}
+                targetBlank
+                icon={FaTwitter}
+              >
+                招待リンクをツイート
+              </ButtonWithIcon>
+            </div>
+            <div className={clsx("mt-5", "mx-10")}>
+              <span className={clsx("text-sm", "ml-5", "text-gray-500")}>
+                招待リンク
+              </span>
+              <blockquote
+                className={clsx(
+                  "mt-1",
+                  "bg-gray-100",
+                  "px-5",
+                  "py-4",
+                  "rounded"
+                )}
+              >
+                {invitationLink}
+              </blockquote>
+            </div>
           </div>
         ) : null}
       </div>
