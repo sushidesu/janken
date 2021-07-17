@@ -5,7 +5,9 @@ export type Props = {
   onChange?: JSX.IntrinsicElements["input"]["onChange"];
   onBlur?: JSX.IntrinsicElements["input"]["onBlur"];
   value?: JSX.IntrinsicElements["input"]["value"];
+  defaultValue?: JSX.IntrinsicElements["input"]["defaultValue"];
   placeholder?: JSX.IntrinsicElements["input"]["placeholder"];
+  readOnly?: JSX.IntrinsicElements["input"]["readOnly"];
   error?: boolean;
   message?: string;
 };

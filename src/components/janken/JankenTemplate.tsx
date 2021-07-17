@@ -1,8 +1,8 @@
-import Head from "next/head";
 import clsx from "clsx";
 import { Room, RoomStatus } from "../../hooks/room/useRoom";
 import { Hand } from "../../hooks/janken/jankenHand";
 import { Layout } from "../Layout";
+import { HeadWithMetadata } from "../HeadWithMetadata";
 import { Button } from "../Button";
 import { UserWrapper } from "../UserWrapper";
 import { UserName } from "../UserName";
@@ -11,6 +11,8 @@ import { JankenButton } from "./JankenButton";
 import { JankenButtonContainer } from "./JankenButtonContainer";
 import { HandViewer } from "./HandViewer";
 import { Result } from "./Result";
+import { LinkButtonWithIcon } from "../LinkButtonWithIcon";
+import { FaTwitter } from "react-icons/fa";
 
 export type Props = Room & {
   status: RoomStatus;
@@ -37,9 +39,7 @@ export function JankenTemplate({
 }: Props): JSX.Element {
   return (
     <Layout>
-      <Head>
-        <title>じゃんけんオンライン</title>
-      </Head>
+      <HeadWithMetadata />
       <div className={clsx("mt-10")}>
         <Result status={result} winner={winner} />
       </div>
@@ -61,30 +61,54 @@ export function JankenTemplate({
             <Ready ready={opponent?.ready} />
           ) : null}
           {status === "waitingPlayersHand" || status === "result" ? (
-            <HandViewer hand={opponentHand} unkown={status !== "result"} />
+            <HandViewer hand={opponentHand} unknown={status !== "result"} />
           ) : null}
         </UserWrapper>
       </div>
-      {status === "waitingPlayersHand" ? (
-        <div className={clsx("mt-10")}>
+      <div className={clsx("mt-10")}>
+        {status === "waitingPlayersHand" ? (
           <JankenButtonContainer>
             <JankenButton hand="rock" onClick={onHandClick} />
             <JankenButton hand="scissors" onClick={onHandClick} />
             <JankenButton hand="paper" onClick={onHandClick} />
           </JankenButtonContainer>
-        </div>
-      ) : null}
-      {status === "waitingPlayersReady" ? (
-        <div className={clsx("mt-10")}>
+        ) : null}
+        {status === "waitingPlayersReady" ? (
           <Button onClick={onReadyClick}>準備OK</Button>
-        </div>
-      ) : null}
-      {status === "waitingPlayersEnter" ? (
-        <div className={clsx("mt-10")}>
-          <p>招待リンク</p>
-          <input className={clsx("border-2")} readOnly value={invitationLink} />
-        </div>
-      ) : null}
+        ) : null}
+        {status === "waitingPlayersEnter" ? (
+          <div className={clsx("flex", "flex-col", "items-center")}>
+            <p className={clsx("text-gray-500", "text-center")}>
+              対戦相手を招待してください
+            </p>
+            <div className={clsx("mt-10")}>
+              <LinkButtonWithIcon
+                href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${invitationLink}&text=対戦相手募集中...`}
+                targetBlank
+                icon={FaTwitter}
+              >
+                招待リンクをツイート
+              </LinkButtonWithIcon>
+            </div>
+            <div className={clsx("mt-5", "mx-10")}>
+              <span className={clsx("text-sm", "ml-5", "text-gray-500")}>
+                招待リンク
+              </span>
+              <blockquote
+                className={clsx(
+                  "mt-1",
+                  "bg-gray-100",
+                  "px-5",
+                  "py-4",
+                  "rounded"
+                )}
+              >
+                {invitationLink}
+              </blockquote>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </Layout>
   );
 }

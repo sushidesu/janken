@@ -6,6 +6,7 @@ import { useCurrentUserIdContext } from "../../hooks/firebase/useCurrentUserId";
 import { useUserNameInput } from "../../hooks/useUserNameInput";
 import { FirebaseClient } from "../../infra/firebaseClient";
 import { Layout } from "../../components/Layout";
+import { HeadWithMetadata } from "../../components/HeadWithMetadata";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 
@@ -66,6 +67,7 @@ function JoinPage({
 
   return (
     <Layout>
+      <HeadWithMetadata />
       <div className={clsx("mt-10")}>
         <Input
           label={"プレイヤー名"}
