@@ -1,4 +1,5 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 import { useState } from "react";
 import clsx from "clsx";
 import { useJankenRouter } from "../../controller/useJankenRouter";
@@ -66,6 +67,9 @@ function JoinPage({
 
   return (
     <Layout>
+      <Head>
+        <title>じゃんけんオンライン</title>
+      </Head>
       <div className={clsx("mt-10")}>
         <Input
           label={"プレイヤー名"}
