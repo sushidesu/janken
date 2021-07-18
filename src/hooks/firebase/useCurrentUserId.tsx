@@ -11,12 +11,10 @@ const useCurrentUserId = (): string | undefined => {
   const [userId, setUserId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    console.log("subscribe auth state");
     const unsubscribe = auth.onAuthStateChanged((maybeUser) => {
       setUserId(maybeUser?.uid);
     });
     return () => {
-      console.log("unsubscribe auth state");
       unsubscribe();
     };
   }, []);

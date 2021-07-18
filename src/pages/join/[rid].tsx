@@ -57,11 +57,9 @@ function JoinPage({
         userId: userId,
         userName: name,
         onJoinSuccess: () => {
-          console.log("success!!");
           router.push({ page: "room", roomId: rid });
         },
         onJoinFailure: () => {
-          console.log("failure");
           window.alert("部屋が満室です");
           router.push({ page: "top" });
         },

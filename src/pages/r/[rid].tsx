@@ -119,7 +119,6 @@ function RoomPage({
   );
 
   useEffect(() => {
-    console.log(roomValue);
     if (roomValue && currentUserId) {
       const { hostUserId, hostUserName, guestUserId, guestUserName } =
         roomValue;

@@ -24,12 +24,10 @@ export class FirebaseClient implements IFirebaseClient {
 
   public async anonymousLogin(): Promise<string | undefined> {
     if (auth.currentUser?.uid) {
-      console.log("already logged in", auth.currentUser.uid);
       return auth.currentUser.uid;
     }
 
     const credential = await auth.signInAnonymously();
-    console.log("login anonymously", credential.user?.uid);
     return credential.user?.uid;
   }
 
