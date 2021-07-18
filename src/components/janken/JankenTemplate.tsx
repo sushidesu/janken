@@ -21,6 +21,7 @@ export type Props = Room & {
   playerHand: Hand | undefined;
   opponentHand: Hand | undefined;
   invitationLink: string;
+  resultLink: string;
   onReadyClick: () => void;
   onHandClick: (hand: Hand) => void;
 };
@@ -34,6 +35,7 @@ export function JankenTemplate({
   opponent,
   opponentHand,
   invitationLink,
+  resultLink,
   onReadyClick,
   onHandClick,
 }: Props): JSX.Element {
@@ -66,6 +68,15 @@ export function JankenTemplate({
         </UserWrapper>
       </div>
       <div className={clsx("mt-10")}>
+        {status === "result" ? (
+          <LinkButtonWithIcon
+            href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${resultLink}`}
+            targetBlank
+            icon={FaTwitter}
+          >
+            結果をツイート
+          </LinkButtonWithIcon>
+        ) : null}
         {status === "waitingPlayersHand" ? (
           <JankenButtonContainer>
             <JankenButton hand="rock" onClick={onHandClick} />

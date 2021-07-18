@@ -94,6 +94,8 @@ function RoomPage({
     }
   };
 
+  const resultLink = `https://janken.dayo.app/result/${rid}`;
+
   const ready = useCallback(() => {
     if (currentUserId) {
       firebaseClient.ready({
@@ -176,6 +178,7 @@ function RoomPage({
         opponent={room.opponent}
         opponentHand={opponentHand}
         invitationLink={invitationLink}
+        resultLink={resultLink}
         onReadyClick={ready}
         onHandClick={jankenpon}
       />
