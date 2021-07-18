@@ -25,7 +25,7 @@ export function Layout({ children }: Props): JSX.Element {
           "my-5",
           "mx-auto",
           "pb-5",
-          "pt-8",
+          "pt-6",
           "flex",
           "flex-col",
           "justify-center",
@@ -38,8 +38,8 @@ export function Layout({ children }: Props): JSX.Element {
       >
         <header>
           <Link href={TOP_PAGE} passHref>
-            <a className={clsx("mt-10", "font-bold", "text-xl")}>
-              {SITE_TITLE}
+            <a className={clsx("font-bold", "text-xl")}>
+              <img width={"200px"} src={"/img/kabuking.png"} alt={SITE_TITLE} />
             </a>
           </Link>
         </header>
