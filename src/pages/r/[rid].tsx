@@ -94,7 +94,16 @@ function RoomPage({
     }
   };
 
-  const resultLink = `${SITE_ORIGIN}/result/${rid}`;
+  const res = (): string => {
+    if (gameResult() === "game") {
+      return `${winner()} の勝ち！`;
+    } else {
+      return "あいこ！";
+    }
+  };
+  const resultText = `${roomValue?.hostUserName} VS ${
+    roomValue?.guestUserName
+  } の勝負は、${res()}`;
 
   const ready = useCallback(() => {
     if (currentUserId) {
@@ -177,7 +186,7 @@ function RoomPage({
         opponent={room.opponent}
         opponentHand={opponentHand}
         invitationLink={invitationLink}
-        resultLink={resultLink}
+        resultText={resultText}
         onReadyClick={ready}
         onHandClick={jankenpon}
       />
