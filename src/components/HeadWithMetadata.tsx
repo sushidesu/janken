@@ -39,6 +39,7 @@ export function HeadWithMetadata({
       <meta property="og:type" content="website" />
       <meta property="og:url" content={URL} />
       <meta property="og:image" content={OGP} />
+      <meta property="twitter:image" content={OGP} />
       <meta property="twitter:card" content={cardType} />
     </Head>
   );
