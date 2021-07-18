@@ -9,6 +9,10 @@ import { Layout } from "../../components/Layout";
 import { HeadWithMetadata } from "../../components/HeadWithMetadata";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import {
+  SITE_TITLE,
+  SITE_UNDER_RECRUITMENT_OGP,
+} from "../../constants/metadata";
 
 export type Props = {
   roomId: string | undefined;
@@ -67,7 +71,11 @@ function JoinPage({
 
   return (
     <Layout>
-      <HeadWithMetadata />
+      <HeadWithMetadata
+        title={`部屋に参加する | ${SITE_TITLE}`}
+        ogp={SITE_UNDER_RECRUITMENT_OGP}
+        cardType="summary_large_image"
+      />
       <div className={clsx("mt-10")}>
         <Input
           label={"プレイヤー名"}
