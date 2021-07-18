@@ -36,7 +36,7 @@ export function HeadWithMetadata({
       {description ? (
         <meta property="og:description" content={description} />
       ) : null}
-      <meta property="og:type" content="web" />
+      <meta property="og:type" content="website" />
       <meta property="og:url" content={URL} />
       <meta property="og:image" content={OGP} />
       <meta property="twitter:card" content={cardType} />
