@@ -13,6 +13,7 @@ import { HandViewer } from "./HandViewer";
 import { Result } from "./Result";
 import { LinkButtonWithIcon } from "../LinkButtonWithIcon";
 import { FaTwitter } from "react-icons/fa";
+import { SITE_ORIGIN } from "../../constants/metadata";
 
 export type Props = Room & {
   status: RoomStatus;
@@ -21,7 +22,7 @@ export type Props = Room & {
   playerHand: Hand | undefined;
   opponentHand: Hand | undefined;
   invitationLink: string;
-  resultLink: string;
+  resultText: string;
   onReadyClick: () => void;
   onHandClick: (hand: Hand) => void;
 };
@@ -35,7 +36,7 @@ export function JankenTemplate({
   opponent,
   opponentHand,
   invitationLink,
-  resultLink,
+  resultText,
   onReadyClick,
   onHandClick,
 }: Props): JSX.Element {
@@ -70,7 +71,7 @@ export function JankenTemplate({
       <div className={clsx("mt-10")}>
         {status === "result" ? (
           <LinkButtonWithIcon
-            href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${resultLink}`}
+            href={`https://twitter.com/intent/tweet?hashtags=じゃんけん一発勝負オンライン&url=${SITE_ORIGIN}&text=${resultText}`}
             targetBlank
             icon={FaTwitter}
           >
