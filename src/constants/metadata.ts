@@ -7,3 +7,5 @@ export const SITE_TITLE = "じゃんけん一発勝負オンライン";
 
 export const APPLE_TOUCH_ICON = `${SITE_ORIGIN}/apple-touch-icon.png`;
 export const FAVICON = `${SITE_ORIGIN}/favicon.png`;
+export const SITE_MAIN_OGP = `${SITE_ORIGIN}/img/ogp.png`;
+export const SITE_UNDER_RECRUITMENT_OGP = `${SITE_ORIGIN}/img/under-recruitment.png`;
