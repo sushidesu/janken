@@ -1,8 +1,10 @@
 import clsx from "clsx";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useEffect } from "react";
 import { HeadWithMetadata } from "../../components/HeadWithMetadata";
 import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
+import { useJankenRouter } from "../../controller/useJankenRouter";
 import { auth, database } from "../../plugins/firebase";
 import { ROOM_PATH, Room } from "../../infra/scheme";
 import { Janken } from "../../hooks/janken/janken";
@@ -67,6 +69,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 function ResultPage({
   queryString,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+  const router = useJankenRouter();
+  useEffect(() => {
+    router.push({ page: "top" });
+  }, []);
   return (
     <Layout>
       <HeadWithMetadata

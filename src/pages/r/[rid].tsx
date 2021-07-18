@@ -94,7 +94,7 @@ function RoomPage({
     }
   };
 
-  const resultLink = `https://janken.dayo.app/result/${rid}`;
+  const resultLink = `${SITE_ORIGIN}/result/${rid}`;
 
   const ready = useCallback(() => {
     if (currentUserId) {
